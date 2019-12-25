@@ -43,7 +43,11 @@ class Point {
     }
 
     Point tick() {
-        Triple<Long, Long, Long> newVelocity = Triple.plus(velocity, acceleration);
+        Triple<Long, Long, Long> newVelocity = Triple.of(
+                velocity.getLeft() + acceleration.getLeft(),
+                velocity.getMiddle() + acceleration.getMiddle(),
+                velocity.getRight() + acceleration.getRight()
+        );
         Coordinate3D newPosition = position.plus(newVelocity);
         //System.out.println("Moving point " + id + " from " + position.toString() + " to " + newPosition);
         return new Point(id, newPosition, newVelocity, acceleration);

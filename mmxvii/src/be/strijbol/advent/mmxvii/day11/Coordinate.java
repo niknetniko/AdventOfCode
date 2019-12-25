@@ -1,5 +1,7 @@
 package be.strijbol.advent.mmxvii.day11;
 
+import be.strijbol.advent.common.geometry.WindDirection;
+
 /**
  * @author Niko Strijbol
  */
@@ -16,11 +18,11 @@ abstract class Coordinate {
         return new BaseCoordinate(x, z);
     }
 
-    public Coordinate neighbour(Direction direction) {
+    public Coordinate neighbour(WindDirection direction) {
         return new Neighbour(this, direction);
     }
 
-    public Path walk(Iterable<Direction> directions) {
+    public Path walk(Iterable<WindDirection> directions) {
         return new Path(directions, this);
     }
 

@@ -16,14 +16,8 @@
  */
 package be.strijbol.advent.common.tuple;
 
-import be.strijbol.advent.common.geometry.Coordinate3D;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -41,7 +35,6 @@ import java.util.stream.StreamSupport;
  * @param <L> the left element type
  * @param <M> the middle element type
  * @param <R> the right element type
- *
  * @since 3.2
  */
 @SuppressWarnings("unused")
@@ -68,7 +61,9 @@ public abstract class Triple<L, M, R> implements Serializable {
 
     }
 
-    /** Serialization version */
+    /**
+     * Serialization version
+     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -88,7 +83,6 @@ public abstract class Triple<L, M, R> implements Serializable {
      * @param <M> the middle element type
      * @param <R> the right element type
      * @return the empty array singleton that can be assigned without compiler warning.
-     *
      * @since 3.10.
      */
     @SuppressWarnings("unchecked")
@@ -102,10 +96,10 @@ public abstract class Triple<L, M, R> implements Serializable {
      * <p>This factory allows the triple to be created using inference to
      * obtain the generic types.</p>
      *
-     * @param <L> the left element type
-     * @param <M> the middle element type
-     * @param <R> the right element type
-     * @param left  the left element, may be null
+     * @param <L>    the left element type
+     * @param <M>    the middle element type
+     * @param <R>    the right element type
+     * @param left   the left element, may be null
      * @param middle the middle element, may be null
      * @param right  the right element, may be null
      * @return a triple formed from the three parameters, not null
@@ -119,7 +113,7 @@ public abstract class Triple<L, M, R> implements Serializable {
     /**
      * <p>Compares this triple to another based on the three elements.</p>
      *
-     * @param obj  the object to compare to, null returns false
+     * @param obj the object to compare to, null returns false
      * @return true if the elements of the triple are equal
      */
     @Override
@@ -137,6 +131,7 @@ public abstract class Triple<L, M, R> implements Serializable {
     }
 
     //-----------------------------------------------------------------------
+
     /**
      * <p>Gets the left element from this triple.</p>
      *
@@ -188,7 +183,7 @@ public abstract class Triple<L, M, R> implements Serializable {
      * element, {@code %2$s} for the middle and {@code %3$s} for the right element.
      * The default format used by {@code toString()} is {@code (%1$s,%2$s,%3$s)}.</p>
      *
-     * @param format  the format string, optionally containing {@code %1$s}, {@code %2$s} and {@code %3$s}, not null
+     * @param format the format string, optionally containing {@code %1$s}, {@code %2$s} and {@code %3$s}, not null
      * @return the formatted string, not null
      */
     public String toString(final String format) {
@@ -210,7 +205,7 @@ public abstract class Triple<L, M, R> implements Serializable {
      * Create an iterable from the triple. Only works if all elements are the same type and not null.
      *
      * @param triple The triple to convert.
-     * @param <L>  The type of the elements.
+     * @param <L>    The type of the elements.
      * @return An iterable for the triple.
      */
     public static <L> Iterable<L> iterable(Triple<L, L, L> triple) {
@@ -263,9 +258,5 @@ public abstract class Triple<L, M, R> implements Serializable {
                     return Triple.of(ts.get(0), ts.get(1), ts.get(2));
                 }
         );
-    }
-
-    public static Triple<Long, Long, Long> plus(Triple<Long, Long, Long> one, Triple<Long, Long, Long> two) {
-        return Triple.of(one.getLeft() + two.getLeft(), one.getMiddle() + two.getMiddle(), one.getRight() + two.getRight());
     }
 }

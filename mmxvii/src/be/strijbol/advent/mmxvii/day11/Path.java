@@ -1,14 +1,16 @@
 package be.strijbol.advent.mmxvii.day11;
 
+import be.strijbol.advent.common.geometry.WindDirection;
+
 /**
  * @author Niko Strijbol
  */
 class Path {
 
-    private final Iterable<Direction> directions;
+    private final Iterable<WindDirection> directions;
     private final Coordinate start;
 
-    public Path(Iterable<Direction> directions, Coordinate start) {
+    public Path(Iterable<WindDirection> directions, Coordinate start) {
         this.directions = directions;
         this.start = start;
     }
@@ -19,7 +21,7 @@ class Path {
 
     public Coordinate getEnd() {
         Coordinate current = start;
-        for (Direction direction: directions) {
+        for (WindDirection direction: directions) {
             current = current.neighbour(direction);
         }
         return current;

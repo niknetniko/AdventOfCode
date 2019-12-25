@@ -10,32 +10,32 @@ import java.util.Objects;
  */
 public class Coordinate3D {
 
-    public static final Coordinate3D ZERO = new Coordinate3D(Triple.of(0L, 0L, 0L));
+    public static final Coordinate3D ZERO = new Coordinate3D(0L, 0L, 0L);
 
-    private final Triple<Long, Long, Long> longTriple;
+    private final Coordinate inner;
 
-    private Coordinate3D(Triple<Long, Long, Long> triple) {
-        this.longTriple = triple;
+    private Coordinate3D(long x, long y, long z) {
+        this.inner = Coordinate.of(x, y, z);
     }
 
     public static Coordinate3D of(long x, long y, long z) {
-        return new Coordinate3D(Triple.of(x, y, z));
+        return new Coordinate3D(x, y, z);
     }
 
     public static Coordinate3D of(Triple<Long, Long, Long> triple) {
-        return new Coordinate3D(triple);
+        return Coordinate3D.of(triple.getLeft(), triple.getMiddle(), triple.getRight());
     }
 
     public long x() {
-        return longTriple.getLeft();
+        return inner.getPoint(1);
     }
 
     public long y() {
-        return longTriple.getMiddle();
+        return inner.getPoint(2);
     }
 
     public long z() {
-        return longTriple.getRight();
+        return inner.getPoint(3);
     }
 
     @Override
@@ -43,31 +43,35 @@ public class Coordinate3D {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinate3D that = (Coordinate3D) o;
-        return Objects.equals(this.longTriple, that.longTriple);
+        return inner.equals(that.inner);
     }
 
     @Override
     public int hashCode() {
-        return longTriple.hashCode();
+        return Objects.hash(inner);
     }
 
     @Override
     public String toString() {
-        return longTriple.toString();
+        return inner.toString();
     }
 
     @NotNull
     public Distance distance(@NotNull Coordinate3D other) {
-        return new Distance(this, other);
+        return new Distance(this.inner, other.inner);
     }
 
     @NotNull
-    public Coordinate3D plus(@NotNull Coordinate3D triple) {
-        return new Coordinate3D(Triple.plus(this.longTriple, triple.longTriple));
+    public Coordinate3D plus(@NotNull Coordinate3D other) {
+        return new Coordinate3D(
+                this.x() + other.x(),
+                this.y() + other.y(),
+                this.z() + other.z()
+        );
     }
 
     @NotNull
-    public Coordinate3D plus(@NotNull Triple<Long, Long, Long> triple) {
-        return new Coordinate3D(Triple.plus(this.longTriple, triple));
+    public Coordinate3D plus(@NotNull Triple<Long, Long, Long> other) {
+        return Coordinate3D.of(other).plus(this);
     }
 }

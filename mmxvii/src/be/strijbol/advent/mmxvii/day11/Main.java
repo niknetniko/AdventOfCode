@@ -1,5 +1,7 @@
 package be.strijbol.advent.mmxvii.day11;
 
+import be.strijbol.advent.common.geometry.WindDirection;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,15 +14,15 @@ import java.util.stream.Collectors;
  */
 public class Main {
 
-    private static List<Direction> read() throws IOException {
+    private static List<WindDirection> read() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("Day 11/input/input.txt"));
         return Arrays.stream(reader.readLine().split(","))
-                .map(Direction::fromString)
+                .map(WindDirection::fromString)
                 .collect(Collectors.toList());
     }
 
     private static int one() throws IOException {
-        List<Direction> directions = read();
+        List<WindDirection> directions = read();
         Coordinate start = Coordinate.of(0, 0, 0);
         Path path = start.walk(directions);
         Coordinate end = path.getEnd();
@@ -29,11 +31,11 @@ public class Main {
     }
 
     private static int two() throws IOException {
-        List<Direction> directions = read();
+        List<WindDirection> directions = read();
         final Coordinate start = Coordinate.of(0, 0, 0);
         Coordinate current = start;
         int furthest = 0;
-        for (Direction direction: directions) {
+        for (WindDirection direction: directions) {
             Coordinate newCoordinate = current.neighbour(direction);
             Distance distance = start.distanceTo(newCoordinate);
             int asValue = distance.asValue();

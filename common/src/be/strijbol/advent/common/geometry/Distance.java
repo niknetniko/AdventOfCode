@@ -5,23 +5,29 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.Objects;
 
-import static java.lang.Math.abs;
-
 /**
  * @author Niko Strijbol
  */
 public class Distance {
 
-    private final Coordinate3D pointA;
-    private final Coordinate3D pointB;
+    private final Coordinate pointA;
+    private final Coordinate pointB;
 
-    Distance(@NotNull Coordinate3D pointA, @NotNull Coordinate3D pointB) {
+    Distance(@NotNull Coordinate pointA, @NotNull Coordinate pointB) {
+        if (pointA.getDimension() != pointB.getDimension()) {
+            throw new IllegalArgumentException("Distance between two points requires the same dimension.");
+        }
         this.pointA = pointA;
         this.pointB = pointB;
     }
 
     public long manhattan() {
-        return abs(pointA.x() - pointB.x()) + abs(pointA.y() - pointB.y()) + abs(pointA.z() - pointB.z());
+        assert pointA.getDimension() == pointB.getDimension();
+        long distance = 0;
+        for (int i = 1; i <= pointA.getDimension(); i++) {
+            distance += Math.abs(pointA.getPoint(i) - pointB.getPoint(i));
+        }
+        return distance;
     }
 
     @Override
@@ -45,5 +51,13 @@ public class Distance {
 
     public static Comparator<Distance> manhattanComparator() {
         return Comparator.comparing(Distance::manhattan);
+    }
+
+    public Coordinate getPointA() {
+        return pointA;
+    }
+
+    public Coordinate getPointB() {
+        return pointB;
     }
 }
