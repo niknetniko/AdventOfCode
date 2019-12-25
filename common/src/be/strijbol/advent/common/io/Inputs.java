@@ -13,7 +13,7 @@ public class Inputs {
 
     public static Stream<String> lines(int year, int day) throws FileNotFoundException {
         String roman = getRomanNumber(year);
-        String path = String.format("%1$s/src/be/strijbol/advent/%1$s/day%2$d/input.txt", roman, day);
+        String path = String.format("src/be/strijbol/advent/%1$s/day%2$d/input.txt", roman, day);
         return new BufferedReader(new FileReader(path)).lines();
     }
 
