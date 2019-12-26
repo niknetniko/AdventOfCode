@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class Main {
 
-    private static void one() throws FileNotFoundException {
-        var input = List.of(1);
+    private static void execute(int i) throws FileNotFoundException {
+        var input = List.of(i);
         var computer = new Computer();
         computer.loadProgram(Inputs.line(2019, 5));
         var out = computer.execute(new ArrayDeque<>(input));
@@ -23,7 +23,16 @@ public class Main {
         }
     }
 
+    private static void one() throws FileNotFoundException {
+        execute(1);
+    }
+
+    private static void two() throws FileNotFoundException {
+        execute(5);
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
         one();
+        two();
     }
 }

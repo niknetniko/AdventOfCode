@@ -38,13 +38,20 @@ public class Memory {
         var modes = pair.getRight();
         return switch (opcode) {
             case 99 -> new HaltInstruction();
+            case 8 -> new EqualsInstruction(param(ip, modes, 1), param(ip, modes, 2), values.get(ip + 3));
+            case 7 -> new LessThanInstruction(param(ip, modes, 1), param(ip, modes, 2), values.get(ip + 3));
+            case 6 -> new JumpIfFalseInstruction(param(ip, modes, 1), param(ip, modes, 2));
+            case 5 -> new JumpIfTrueInstruction(param(ip, modes, 1), param(ip, modes, 2));
+            case 4 -> new OutputInstruction(param(ip, modes, 1));
             case 3 -> new InputInstruction(values.get(ip + 1));
-            case 4 -> new OutputInstruction(new Parameter(values.get(ip + 1), modes.get(0)));
-            default -> new MathInstruction(opcode,
-                    new Parameter(values.get(ip + 1), modes.get(0)),
-                    new Parameter(values.get(ip + 2), modes.get(1)),
-                    values.get(ip + 3));
+            case 2 -> new MultiplyInstruction(param(ip, modes, 1), param(ip, modes, 2), values.get(ip + 3));
+            case 1 -> new AddInstruction(param(ip, modes, 1), param(ip, modes, 2), values.get(ip + 3));
+            default -> throw new IllegalArgumentException("Unknown opcode " + opcode);
         };
+    }
+
+    private Parameter param(int ip, List<ParameterMode> modes, int number) {
+        return new Parameter(values.get(ip + number), modes.get(number - 1));
     }
 
     private Pair<Integer, List<ParameterMode>> parseOpcode(int code) {

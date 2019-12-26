@@ -30,7 +30,7 @@ public class Computer {
             do {
                 Instruction instruction = memory.readNext(ip);
                 instruction.execute(memory, inputs).ifPresent(output::add);
-                ip += instruction.getLength();
+                ip = instruction.updateInstructionPointer(memory, ip);
             } while (ip < memory.length());
         } catch (HaltException e) {
             // Nothing.
