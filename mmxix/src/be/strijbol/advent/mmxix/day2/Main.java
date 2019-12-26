@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 public class Main {
 
     private static String read() throws FileNotFoundException {
-        return Inputs.lines(2019, 2).findFirst().orElseThrow();
+        return Inputs.line(2019, 2);
     }
 
     static int one() throws FileNotFoundException {

@@ -1,8 +1,17 @@
 package be.strijbol.advent.mmxix.codes;
 
+import be.strijbol.advent.common.tuple.Pair;
+import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
+import java.util.stream.Collectors;
 
 /**
  * The memory of the computer.
@@ -24,11 +33,29 @@ public class Memory {
      * @return The instruction.
      */
     public Instruction readNext(int ip) {
-        int opcode = this.values.get(ip);
+        var pair = parseOpcode(this.values.get(ip));
+        int opcode = pair.getLeft();
+        var modes = pair.getRight();
         return switch (opcode) {
             case 99 -> new HaltInstruction();
-            default -> new MathInstruction(opcode, values.get(ip + 1), values.get(ip + 2), values.get(ip + 3));
+            case 3 -> new InputInstruction(values.get(ip + 1));
+            case 4 -> new OutputInstruction(new Parameter(values.get(ip + 1), modes.get(0)));
+            default -> new MathInstruction(opcode,
+                    new Parameter(values.get(ip + 1), modes.get(0)),
+                    new Parameter(values.get(ip + 2), modes.get(1)),
+                    values.get(ip + 3));
         };
+    }
+
+    private Pair<Integer, List<ParameterMode>> parseOpcode(int code) {
+        var asString = String.format("%04d", code);
+        var opcode = Integer.valueOf(asString.substring(asString.length() - 2));
+        var others = asString.substring(0, asString.length() - 2).chars()
+                .map(operand -> Integer.parseInt(Character.toString(operand)))
+                .mapToObj(ParameterMode::get)
+                .collect(Collectors.toList());
+        Collections.reverse(others);
+        return Pair.of(opcode, others);
     }
 
     public int output() {

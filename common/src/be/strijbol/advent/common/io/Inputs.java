@@ -20,6 +20,14 @@ public class Inputs {
         return lines(year, day, "input.txt");
     }
 
+    public static String line(int year, int day) throws FileNotFoundException {
+        return Inputs.lines(year, day).findFirst().orElseThrow();
+    }
+
+    public static String line(int year, int day, String file) throws FileNotFoundException {
+        return Inputs.lines(year, day, file).findFirst().orElseThrow();
+    }
+
     /**
      * From https://stackoverflow.com/a/39411250/1831741.
      */

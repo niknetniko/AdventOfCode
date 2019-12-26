@@ -1,5 +1,8 @@
 package be.strijbol.advent.mmxix.codes;
 
+import java.util.Optional;
+import java.util.Queue;
+
 /**
  * Interface for the different instructions.
  *
@@ -10,7 +13,7 @@ public interface Instruction {
     /**
      * Execute the opcode.
      */
-    void execute(Memory memory) throws HaltException;
+    Optional<Integer> execute(Memory memory, Queue<Integer> inputs) throws HaltException;
 
     int getLength();
 }
