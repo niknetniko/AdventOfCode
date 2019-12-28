@@ -1,7 +1,7 @@
 package be.strijbol.advent.mmxix.codes;
 
-import java.util.Optional;
-import java.util.Queue;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Niko Strijbol
@@ -15,8 +15,8 @@ class OutputInstruction implements Instruction {
     }
 
     @Override
-    public Optional<Integer> execute(Memory memory, Queue<Integer> inputs) {
-        return Optional.of(address.reduce(memory));
+    public void execute(Memory memory, Supplier<Integer> input, Consumer<Integer> output) {
+        output.accept(address.reduce(memory));
     }
 
     @Override

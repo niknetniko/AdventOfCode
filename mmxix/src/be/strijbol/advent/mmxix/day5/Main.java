@@ -16,7 +16,7 @@ public class Main {
         var input = List.of(i);
         var computer = new Computer();
         computer.loadProgram(Inputs.line(2019, 5));
-        var out = computer.execute(new ArrayDeque<>(input));
+        var out = computer.execute(input);
         System.out.println("Output is: ");
         for (var o: out) {
             System.out.println(o);

@@ -5,5 +5,5 @@ package be.strijbol.advent.mmxix.codes;
  *
  * @author Niko Strijbol
  */
-class HaltException extends Exception {
+public class HaltException extends RuntimeException {
 }

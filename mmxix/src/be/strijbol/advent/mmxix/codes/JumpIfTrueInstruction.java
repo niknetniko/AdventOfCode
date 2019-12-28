@@ -21,11 +21,10 @@ public class JumpIfTrueInstruction implements Instruction {
     }
 
     @Override
-    public Optional<Integer> execute(Memory memory, Queue<Integer> inputs) {
+    public void execute(Memory memory) {
         hasExecuted = true;
         memoryContent = test.reduce(memory);
         jump = ip.reduce(memory);
-        return Optional.empty();
     }
 
     @Override

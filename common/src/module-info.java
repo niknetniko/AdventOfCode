@@ -8,4 +8,5 @@ module be.strijbol.advent.common {
     exports be.strijbol.advent.common.geometry;
     exports be.strijbol.advent.common.collections;
     exports be.strijbol.advent.common.io;
+    exports be.strijbol.advent.common.util;
 }

@@ -1,16 +1,11 @@
 package be.strijbol.advent.mmxix.codes;
 
 import be.strijbol.advent.common.tuple.Pair;
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.StreamEx;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
-import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 
 /**

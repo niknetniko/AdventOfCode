@@ -1,8 +1,5 @@
 package be.strijbol.advent.mmxix.codes;
 
-import java.util.Optional;
-import java.util.Queue;
-
 /**
  * @author Niko Strijbol
  */
@@ -19,13 +16,12 @@ public class EqualsInstruction implements Instruction {
     }
 
     @Override
-    public Optional<Integer> execute(Memory memory, Queue<Integer> inputs) {
+    public void execute(Memory memory) {
         if (a.reduce(memory) == b.reduce(memory)) {
             memory.write(c, 1);
         } else {
             memory.write(c, 0);
         }
-        return Optional.empty();
     }
 
     @Override

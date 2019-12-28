@@ -19,13 +19,12 @@ public class LessThanInstruction implements Instruction {
     }
 
     @Override
-    public Optional<Integer> execute(Memory memory, Queue<Integer> inputs) {
+    public void execute(Memory memory) {
         if (a.reduce(memory) < b.reduce(memory)) {
             memory.write(c, 1);
         } else {
             memory.write(c, 0);
         }
-        return Optional.empty();
     }
 
     @Override

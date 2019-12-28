@@ -1,10 +1,5 @@
 package be.strijbol.advent.mmxix.codes;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.function.IntBinaryOperator;
-
 /**
  * Interface for the different opcodes.
  *
@@ -23,9 +18,8 @@ class AddInstruction implements Instruction {
     }
 
     @Override
-    public Optional<Integer> execute(Memory memory, Queue<Integer> inputs) {
+    public void execute(Memory memory) {
         memory.write(output, input1.reduce(memory) + input2.reduce(memory));
-        return Optional.empty();
     }
 
     @Override
