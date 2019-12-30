@@ -12,8 +12,8 @@ public class JumpIfTrueInstruction implements Instruction {
     private final Parameter ip;
 
     private boolean hasExecuted = false;
-    private int memoryContent = 0;
-    private int jump = 0;
+    private long memoryContent = 0;
+    private long jump = 0;
 
     public JumpIfTrueInstruction(Parameter test, Parameter ip) {
         this.test = test;
@@ -33,7 +33,7 @@ public class JumpIfTrueInstruction implements Instruction {
             throw new IllegalStateException("Execute the instruction first!");
         }
         if (memoryContent != 0) {
-            return jump;
+            return Math.toIntExact(jump);
         } else {
             return previousIp + 3;
         }

@@ -15,7 +15,7 @@ public interface Instruction {
     /**
      * Execute the instruction.
      */
-    default void execute(Memory memory, Supplier<Integer> input, Consumer<Integer> output) throws HaltException {
+    default void execute(Memory memory, Supplier<Long> input, Consumer<Long> output) throws HaltException {
         execute(memory);
     }
 

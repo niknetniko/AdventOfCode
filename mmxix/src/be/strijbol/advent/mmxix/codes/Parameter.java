@@ -3,17 +3,27 @@ package be.strijbol.advent.mmxix.codes;
 /**
  * @author Niko Strijbol
  */
-public class Parameter {
+public abstract class Parameter {
 
-    private final int value;
-    private final ParameterMode mode;
+    private Parameter() {}
 
-    public Parameter(int value, ParameterMode mode) {
-        this.value = value;
-        this.mode = mode;
+    public abstract long reduce(Memory memory);
+
+    public static Parameter read(long value, ParameterMode mode) {
+        return new Parameter() {
+            @Override
+            public long reduce(Memory memory) {
+                return mode.resolve(value, memory, true);
+            }
+        };
     }
 
-    public int reduce(Memory memory) {
-        return mode.getValue(value, memory);
+    public static Parameter write(long value, ParameterMode mode) {
+        return new Parameter() {
+            @Override
+            public long reduce(Memory memory) {
+                return mode.resolve(value, memory, false);
+            }
+        };
     }
 }

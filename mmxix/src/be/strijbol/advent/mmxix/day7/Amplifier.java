@@ -13,12 +13,12 @@ import java.util.function.Supplier;
 /**
  * @author Niko Strijbol
  */
-class Amplifier implements Consumer<Integer> {
+class Amplifier implements Consumer<Long> {
 
     private final String name;
     private final Computer computer;
 
-    private Consumer<Integer> output;
+    private Consumer<Long> output;
 
     public Amplifier(String name, Computer computer) {
         this.name = name;
@@ -28,19 +28,20 @@ class Amplifier implements Consumer<Integer> {
         }
     }
 
-    public void setOutput(Consumer<Integer> output) {
+    public void setOutput(Consumer<Long> output) {
         this.output = output;
     }
 
     @Override
-    public void accept(Integer integer) {
+    public void accept(Long integer) {
         if (output == null) {
             throw new IllegalStateException("The amplifier needs to be hooked up with output.");
         }
         computer.execute(new Supplier<>() {
-            final Supplier<Integer> nested = Lists.asSupplier(List.of(integer));
+            final Supplier<Long> nested = Lists.asSupplier(List.of(integer));
+
             @Override
-            public Integer get() {
+            public Long get() {
                 try {
                     return nested.get();
                 } catch (NoSuchElementException e) {
@@ -68,7 +69,7 @@ class Amplifier implements Consumer<Integer> {
         return Objects.hash(name);
     }
 
-    public Consumer<Integer> getOutput() {
+    public Consumer<Long> getOutput() {
         return output;
     }
 }

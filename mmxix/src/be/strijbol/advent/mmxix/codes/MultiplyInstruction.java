@@ -9,9 +9,9 @@ class MultiplyInstruction implements Instruction {
 
     private final Parameter input1;
     private final Parameter input2;
-    private final int output;
+    private final Parameter output;
 
-    public MultiplyInstruction(Parameter input1, Parameter input2, int output) {
+    public MultiplyInstruction(Parameter input1, Parameter input2, Parameter output) {
         this.input1 = input1;
         this.input2 = input2;
         this.output = output;
@@ -19,7 +19,7 @@ class MultiplyInstruction implements Instruction {
 
     @Override
     public void execute(Memory memory) {
-        memory.write(output, input1.reduce(memory) * input2.reduce(memory));
+        memory.write(output.reduce(memory), input1.reduce(memory) * input2.reduce(memory));
     }
 
     @Override

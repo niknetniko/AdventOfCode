@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Main {
 
-    private static void execute(int i) throws FileNotFoundException {
+    private static void execute(long i) throws FileNotFoundException {
         var input = List.of(i);
         var computer = new Computer();
         computer.loadProgram(Inputs.line(2019, 5));

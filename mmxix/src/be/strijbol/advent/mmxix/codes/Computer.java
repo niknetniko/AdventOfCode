@@ -17,7 +17,7 @@ public class Computer {
 
     public void loadProgram(String program) {
         this.ip = 0;
-        this.memory = new Memory(Arrays.stream(program.split(",")).map(Integer::valueOf).collect(Collectors.toList()));
+        this.memory = new Memory(Arrays.stream(program.split(",")).map(Long::valueOf).collect(Collectors.toList()));
     }
 
     public void execute(int input1, int input2) {
@@ -26,14 +26,14 @@ public class Computer {
         execute(Collections.emptyList());
     }
 
-    public List<Integer> execute(List<Integer> inputs) {
+    public List<Long> execute(List<Long> inputs) {
         var input = Lists.asSupplier(inputs);
-        final var collected = new ArrayList<Integer>();
+        final var collected = new ArrayList<Long>();
         execute(input, collected::add);
         return collected;
     }
 
-    public void execute(Supplier<Integer> input, Consumer<Integer> output) {
+    public void execute(Supplier<Long> input, Consumer<Long> output) {
         // To prevent infinite loops, we must increment ip before executing the output.
         var out = new DelayedOutput(output);
 
@@ -57,6 +57,13 @@ public class Computer {
         }
     }
 
+    public static void repl(String program) {
+        var pc = new Computer();
+        var input = new Scanner(System.in);
+        pc.loadProgram(program);
+        pc.execute(input::nextLong, System.out::println);
+    }
+
     public Memory getMemory() {
         return memory;
     }
@@ -65,17 +72,17 @@ public class Computer {
         return memory != null;
     }
 
-    private static class DelayedOutput implements Consumer<Integer> {
+    private static class DelayedOutput implements Consumer<Long> {
 
-        private final Consumer<Integer> nested;
-        private final List<Integer> collected = new ArrayList<>();
+        private final Consumer<Long> nested;
+        private final List<Long> collected = new ArrayList<>();
 
-        private DelayedOutput(Consumer<Integer> nested) {
+        private DelayedOutput(Consumer<Long> nested) {
             this.nested = nested;
         }
 
         @Override
-        public void accept(Integer integer) {
+        public void accept(Long integer) {
             collected.add(integer);
         }
 

@@ -20,14 +20,12 @@ public class Main {
         return Inputs.line(2019, 2);
     }
 
-    static int one() throws FileNotFoundException {
+    static long one() throws FileNotFoundException {
         var computer = new Computer();
         computer.loadProgram(read());
         computer.execute(12, 2);
         return computer.getMemory().output();
     }
-
-
 
     static int two() throws FileNotFoundException {
         var computer = new Computer();

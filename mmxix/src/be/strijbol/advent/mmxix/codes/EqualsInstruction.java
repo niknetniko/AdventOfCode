@@ -7,20 +7,20 @@ public class EqualsInstruction implements Instruction {
 
     private final Parameter a;
     private final Parameter b;
-    private final int c;
+    private final Parameter output;
 
-    public EqualsInstruction(Parameter a, Parameter b, int c) {
+    public EqualsInstruction(Parameter a, Parameter b, Parameter output) {
         this.a = a;
         this.b = b;
-        this.c = c;
+        this.output = output;
     }
 
     @Override
     public void execute(Memory memory) {
         if (a.reduce(memory) == b.reduce(memory)) {
-            memory.write(c, 1);
+            memory.write(output.reduce(memory), 1);
         } else {
-            memory.write(c, 0);
+            memory.write(output.reduce(memory), 0);
         }
     }
 

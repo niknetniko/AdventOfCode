@@ -8,15 +8,15 @@ import java.util.function.Supplier;
  */
 class InputInstruction implements Instruction {
 
-    private final int address;
+    private final Parameter address;
 
-    public InputInstruction(int address) {
+    public InputInstruction(Parameter address) {
         this.address = address;
     }
 
     @Override
-    public void execute(Memory memory, Supplier<Integer> input, Consumer<Integer> output) {
-        memory.write(address, input.get());
+    public void execute(Memory memory, Supplier<Long> input, Consumer<Long> output) {
+        memory.write(address.reduce(memory), input.get());
     }
 
     @Override

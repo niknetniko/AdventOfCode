@@ -15,7 +15,7 @@ class OutputInstruction implements Instruction {
     }
 
     @Override
-    public void execute(Memory memory, Supplier<Integer> input, Consumer<Integer> output) {
+    public void execute(Memory memory, Supplier<Long> input, Consumer<Long> output) {
         output.accept(address.reduce(memory));
     }
 
