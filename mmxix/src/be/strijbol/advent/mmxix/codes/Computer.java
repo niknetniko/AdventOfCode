@@ -64,6 +64,12 @@ public class Computer {
         pc.execute(input::nextLong, System.out::println);
     }
 
+    public static void run(String program, List<Long> inputs) {
+        var pc = new Computer();
+        pc.loadProgram(program);
+        pc.execute(Lists.asSupplier(inputs), System.out::println);
+    }
+
     public Memory getMemory() {
         return memory;
     }

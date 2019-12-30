@@ -2,11 +2,7 @@ package be.strijbol.advent.mmxix.codes;
 
 import be.strijbol.advent.common.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * The memory of the computer.
@@ -29,41 +25,33 @@ public class Memory {
      * @return The instruction.
      */
     public Instruction readNext(int ip) {
-        var pair = parseOpcode(Math.toIntExact(this.values.get(ip)));
-        int opcode = pair.getLeft();
-        var modes = pair.getRight();
+        var rawCode = Math.toIntExact(this.values.get(ip));
+        var opcode = rawCode % 100;
+        // We assume max three operands.
+        var mode1 = (rawCode / 100) % 10;
+        var mode2 = (rawCode / 1_000) % 10;
+        var mode3 = (rawCode / 10_000) % 10;
         return switch (opcode) {
             case 99 -> new HaltInstruction();
-            case 9 -> new RelativeBaseInstruction(rp(ip, modes, 1));
-            case 8 -> new EqualsInstruction(rp(ip, modes, 1), rp(ip, modes, 2), wp(ip, modes, 3));
-            case 7 -> new LessThanInstruction(rp(ip, modes, 1), rp(ip, modes, 2), wp(ip, modes, 3));
-            case 6 -> new JumpIfFalseInstruction(rp(ip, modes, 1), rp(ip, modes, 2));
-            case 5 -> new JumpIfTrueInstruction(rp(ip, modes, 1), rp(ip, modes, 2));
-            case 4 -> new OutputInstruction(rp(ip, modes, 1));
-            case 3 -> new InputInstruction(wp(ip, modes, 1));
-            case 2 -> new MultiplyInstruction(rp(ip, modes, 1), rp(ip, modes, 2), wp(ip, modes, 3));
-            case 1 -> new AddInstruction(rp(ip, modes, 1), rp(ip, modes, 2), wp(ip, modes, 3));
+            case 9 -> new RelativeBaseInstruction(rp(ip, mode1, 1));
+            case 8 -> new EqualsInstruction(rp(ip, mode1, 1), rp(ip, mode2, 2), wp(ip, mode3, 3));
+            case 7 -> new LessThanInstruction(rp(ip, mode1, 1), rp(ip, mode2, 2), wp(ip, mode3, 3));
+            case 6 -> new JumpIfFalseInstruction(rp(ip, mode1, 1), rp(ip, mode2, 2));
+            case 5 -> new JumpIfTrueInstruction(rp(ip, mode1, 1), rp(ip, mode2, 2));
+            case 4 -> new OutputInstruction(rp(ip, mode1, 1));
+            case 3 -> new InputInstruction(wp(ip, mode1, 1));
+            case 2 -> new MultiplyInstruction(rp(ip, mode1, 1), rp(ip, mode2, 2), wp(ip, mode3, 3));
+            case 1 -> new AddInstruction(rp(ip, mode1, 1), rp(ip, mode2, 2), wp(ip, mode3, 3));
             default -> throw new IllegalArgumentException("Unknown opcode " + opcode);
         };
     }
 
-    private Parameter rp(int ip, List<ParameterMode> modes, int number) {
-        return Parameter.read(values.get(ip + number), modes.get(number - 1));
+    private Parameter rp(int ip, int mode, int number) {
+        return Parameter.read(values.get(ip + number), ParameterMode.get(mode));
     }
 
-    private Parameter wp(int ip, List<ParameterMode> modes, int number) {
-        return Parameter.write(values.get(ip + number), modes.get(number - 1));
-    }
-
-    private Pair<Integer, List<ParameterMode>> parseOpcode(int code) {
-        var asString = String.format("%05d", code);
-        var opcode = Integer.valueOf(asString.substring(asString.length() - 2));
-        var others = asString.substring(0, asString.length() - 2).chars()
-                .map(operand -> Integer.parseInt(Character.toString(operand)))
-                .mapToObj(ParameterMode::get)
-                .collect(Collectors.toList());
-        Collections.reverse(others);
-        return Pair.of(opcode, others);
+    private Parameter wp(int ip, int mode, int number) {
+        return Parameter.write(values.get(ip + number), ParameterMode.get(mode));
     }
 
     public long output() {
@@ -96,7 +84,7 @@ public class Memory {
         if (address < 0) {
             throw new IndexOutOfBoundsException("No negative memory addresses allowed");
         }
-        if (address > this.values.size()) {
+        if (address >= this.values.size()) {
             return 0;
         }
         return values.get(Math.toIntExact(address));
