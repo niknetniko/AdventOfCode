@@ -1,3 +1,3 @@
 # Advent of Code
 
-Most files are Java, except those in `old`.
+Repo containing all Advent of Code solutions I've participated in.
