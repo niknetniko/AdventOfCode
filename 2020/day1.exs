@@ -3,7 +3,7 @@ defmodule Day1 do
   def permutations(list), do: for elem <- list, rest <- permutations(list--[elem]), do: [elem|rest]
   
   def numbers do
-    File.cwd!() <> "/mmxx/inputs/day1.txt"
+    File.cwd!() <> "/2020/inputs/day1.txt"
     |> File.stream!()
     |> Enum.map(&String.trim_trailing/1)
     |> Enum.map(&String.to_integer/1)
