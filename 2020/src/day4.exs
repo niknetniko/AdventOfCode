@@ -4,8 +4,7 @@ defmodule Day4 do
       text
       |> String.split()
       |> Enum.map(&String.split(&1, ":"))
-      |> Enum.map(fn [name, value] -> {String.to_atom(name), value} end)
-      |> Map.new()
+      |> Map.new(fn [name, value] -> {String.to_atom(name), value} end)
     end
 
     def valid1?(passport) do
@@ -45,16 +44,13 @@ defmodule Day4 do
   
   def part1() do
     read()
-    |> Enum.filter(&Passport.valid1?/1)
-    |> Enum.count()
+    |> Enum.count(&Passport.valid1?/1)
     |> IO.inspect()
   end
 
   def part2() do
     read()
-    |> Enum.filter(&Passport.valid1?/1)
-    |> Enum.filter(&Passport.valid2?/1)
-    |> Enum.count()
+    |> Enum.count(&Passport.valid1?(&1) and Passport.valid2?(&1))
     |> IO.inspect()
   end
 end
