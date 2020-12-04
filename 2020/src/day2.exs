@@ -26,7 +26,7 @@ defmodule Day2 do
   end
   
   def read do
-    File.cwd!() <> "/2020/inputs/day2.txt"
+    File.cwd!() <> "/2020/src/inputs/day2.txt"
     |> File.stream!()
     |> Enum.map(fn a ->
         [min, max, letter, password] = Regex.run(~r/^(\d+)-(\d+) ([[:alpha:]]): ([[:alpha:]]+)$/, a, capture: :all_but_first)

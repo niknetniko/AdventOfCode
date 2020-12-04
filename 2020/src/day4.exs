@@ -40,7 +40,7 @@ defmodule Day4 do
   end
   
   def read() do
-    File.cwd!() <> "/2020/inputs/day4.txt"
+    File.cwd!() <> "/2020/src/inputs/day4.txt"
     |> File.read!()
     |> String.split("\n\n")
     |> Enum.map(&String.trim/1)
