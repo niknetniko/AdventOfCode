@@ -18,7 +18,7 @@ defmodule Day4 do
     
     defp between?(value, min, max) do
       case Integer.parse(value) do
-        {number, _} -> number >= min and number <= max
+        {number, _} -> number in min..max
         _ -> false
       end
     end

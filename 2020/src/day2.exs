@@ -7,7 +7,7 @@ defmodule Day2 do
       password
       |> String.graphemes()
       |> Enum.count(& &1 == l)
-      |> (fn count -> count >= min and count <= max end).()
+      |> (fn count -> count in min..max end).()
     end
   end
   
