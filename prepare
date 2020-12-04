@@ -1,1 +1,4 @@
 #!/bin/sh
+
+d=$(echo $1 | sed 's/^0*//')
+elixirc -r "2020/src/runner.exs" "2020/src/day$d.exs"

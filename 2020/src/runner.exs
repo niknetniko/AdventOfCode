@@ -13,9 +13,9 @@ defmodule Runner do
   
   def run(day, part, input) do
     name = module_name(day)
-    modules = Code.require_file("2020/src/#{String.downcase(name)}.exs")
-    {module, _} = Enum.find(modules, fn {m, _} -> m == :"Elixir.#{name}" end)
-    apply(module, part_name(part), [input])
+    #modules = Code.require_file("2020/src/#{String.downcase(name)}.exs")
+    #{module, _} = Enum.find(modules, fn {m, _} -> m == :"Elixir.#{name}" end)
+    apply(:"Elixir.#{name}", part_name(part), [input])
   end
   
   defp module_name(day) do
@@ -33,4 +33,4 @@ defmodule Runner do
   end
 end
 
-Runner.execute()
+#Runner.execute()
