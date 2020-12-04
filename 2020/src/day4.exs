@@ -1,4 +1,6 @@
 defmodule Day4 do
+  @behaviour Runner.Day
+
   defmodule Passport do
     def parse(text) do
       text
@@ -34,26 +36,24 @@ defmodule Day4 do
     defp valid_field?(:cid, _), do: true
   end
   
-  def read() do
-    File.cwd!() <> "/2020/src/inputs/day4.txt"
-    |> File.read!()
+  def read(file) do
+    File.read!(file)
     |> String.split("\n\n")
     |> Enum.map(&String.trim/1)
     |> Enum.map(&Passport.parse/1)
   end
   
-  def part1() do
-    read()
+  @impl true
+  def part1(file) do
+    read(file)
     |> Enum.count(&Passport.valid1?/1)
     |> IO.inspect()
   end
 
-  def part2() do
-    read()
+  @impl true
+  def part2(file) do
+    read(file)
     |> Enum.count(&Passport.valid1?(&1) and Passport.valid2?(&1))
     |> IO.inspect()
   end
 end
-
-Day4.part1()
-Day4.part2()

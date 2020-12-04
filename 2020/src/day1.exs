@@ -1,10 +1,11 @@
 defmodule Day1 do
+  @behaviour Runner.Day
+  
   def permutations([]), do: [[]]
   def permutations(list), do: for elem <- list, rest <- permutations(list--[elem]), do: [elem|rest]
   
-  def numbers do
-    File.cwd!() <> "/2020/inputs/day1.txt"
-    |> File.stream!()
+  def numbers(file) do
+    File.stream!(file)
     |> Enum.map(&String.trim_trailing/1)
     |> Enum.map(&String.to_integer/1)
   end
@@ -23,22 +24,21 @@ defmodule Day1 do
     end)
   end
   
-  def solveOne() do
-    values = numbers()
+  @impl true
+  def part1(file) do
+    values = numbers(file)
     combinations(values, values)
     |> Enum.find(fn {e, ee} -> e + ee == 2020 and e != ee end)
     |> (fn {e, ee} -> e * ee end).()
     |> IO.inspect()
   end
 
-  def solveTwo() do
-    values = numbers()
+  @impl true
+  def part2(file) do
+    values = numbers(file)
     combinations(values, values, values)
     |> Enum.find(fn {e, ee, eee} -> e + ee + eee == 2020 and  e != ee and ee != eee end)
     |> (fn {e, ee, eee} -> e * ee * eee end).()
     |> IO.inspect()
   end
 end
-
-#Day1.solveOne()
-Day1.solveTwoAlt()

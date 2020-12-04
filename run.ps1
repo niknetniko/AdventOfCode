@@ -38,43 +38,4 @@ else
 # Get the path to script responsible for the requested year and/or day.
 # You can override the yearly script by providing one per day.
 
-function ToRoman($integer)
-{
-    $romans = [ordered]@{
-        1000 = "m";
-        900 = "cm";
-        500 = "d";
-        400 = "cd";
-        100 = "c";
-        90 = "xc";
-        50 = "l";
-        40 = "xl";
-        10 = "x";
-        9 = "ix";
-        5 = "v";
-        4 = "iv";
-        1 = "i"
-    }
-    
-    write "HALLO"
-
-    $result = ""
-    while ($integer -gt 0)
-    {
-        write $result
-        foreach($h in $romans.GetEnumerator()) {
-            while ($integer -gt $h.Key)
-            {
-                $result = $result + $h.Value
-                $integer = $integer - $h.Key
-                write $result
-            }
-            write $result
-        }
-        write $result
-    }
-    return $result
-}
-
-$rr = ToRoman($year)
-Write-Output $rr
+Write-Output "WORK IN PROGRESS"

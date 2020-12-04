@@ -1,4 +1,5 @@
 defmodule Day2 do
+  @behaviour Runner.Day
   
   defmodule PasswordPolicy do
     defstruct ~w(min max letter)a
@@ -25,31 +26,25 @@ defmodule Day2 do
     end
   end
   
-  def read do
-    File.cwd!() <> "/2020/src/inputs/day2.txt"
-    |> File.stream!()
+  def read(file) do
+    File.stream!(file)
     |> Enum.map(fn a ->
         [min, max, letter, password] = Regex.run(~r/^(\d+)-(\d+) ([[:alpha:]]): ([[:alpha:]]+)$/, a, capture: :all_but_first)
         %Entry{policy: %PasswordPolicy{min: String.to_integer(min), max: String.to_integer(max), letter: letter}, password: password}
     end)
   end
   
-  def part1 do
-    read()
-    |> Enum.filter(&Entry.old_valid?/1)
-    |> Enum.count()
+  @impl true
+  def part1(file) do
+    read(file)
+    |> Enum.count(&Entry.old_valid?/1)
     |> IO.inspect()
   end
 
-  def part2 do
-    read()
-    |> Enum.filter(&Entry.new_valid?/1)
-    |> Enum.count()
+  @impl true
+  def part2(file) do
+    read(file)
+    |> Enum.count(&Entry.new_valid?/1)
     |> IO.inspect()
   end
-
-
 end
-
-Day2.part1()
-Day2.part2()

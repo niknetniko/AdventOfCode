@@ -1,0 +1,3 @@
+#!/bin/sh
+
+elixir ./2020/src/runner.exs "$@"
