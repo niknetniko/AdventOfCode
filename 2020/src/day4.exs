@@ -26,13 +26,9 @@ defmodule Day4 do
     defp valid_field?(:byr, value), do: between?(value, 1920, 2002)
     defp valid_field?(:iyr, value), do: between?(value, 2010, 2020)
     defp valid_field?(:eyr, value), do: between?(value, 2020, 2030)
-    defp valid_field?(:hgt, value) do
-      case String.slice(value, -2..-1) do
-        "cm" -> String.slice(value, 0..-2) |> between?(150, 193)
-        "in" -> String.slice(value, 0..-2) |> between?(59, 76)
-        _ -> false
-      end
-    end
+    defp valid_field?(:hgt, <<part :: binary-size(3)>> <> "cm"), do: between?(part, 150, 193)
+    defp valid_field?(:hgt, <<part :: binary-size(2)>> <> "in"), do: between?(part, 59, 76)
+    defp valid_field?(:hgt, _), do: false
     defp valid_field?(:hcl, value), do: Regex.match?(~r/^#[0-9a-f]{6}/, value)
     defp valid_field?(:ecl, value), do: value in ~w(amb blu brn gry grn hzl oth)
     defp valid_field?(:pid, value), do: Regex.match?(~r/^\d{9}$/, value)
