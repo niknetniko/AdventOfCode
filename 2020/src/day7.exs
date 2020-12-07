@@ -37,13 +37,10 @@ defmodule Day7 do
   end
   
   defp do_count(map, color) do
-    containing = Map.get(map, color)
-    c = Enum.map(containing, fn %{colour: c, amount: a} -> a * do_count(map, c) end)
-        |> Enum.sum()
-    c + 1
+    Map.get(map, color)
+    |> Enum.map(fn %{colour: c, amount: a} -> a * (do_count(map, c) + 1) end)
+    |> Enum.sum()
   end
-  
-  defp count_amount(map, color), do: do_count(map, color) - 1
   
   @impl true
   def part1(file) do
@@ -55,7 +52,7 @@ defmodule Day7 do
   @impl true
   def part2(file) do
     read(file)
-    |> count_amount("shiny gold")
+    |> do_count("shiny gold")
     |> IO.inspect()
   end
 end
