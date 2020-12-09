@@ -1,4 +1,6 @@
 defmodule Day8 do
+  @behaviour Runner.Day
+
   def read(file) do
     File.stream!(file)
     |> Enum.map(&String.trim/1)
@@ -32,6 +34,7 @@ defmodule Day8 do
     |> Enum.take(-1)
   end
   
+  @impl true
   def part1(file) do
     read(file)
     |> run_program()
@@ -46,6 +49,7 @@ defmodule Day8 do
     end
   end
   
+  @impl true
   def part2(file) do
     ops = read(file)
     # For each operator, replace at index i if possible and check.
