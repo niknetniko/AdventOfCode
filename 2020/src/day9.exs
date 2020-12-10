@@ -1,4 +1,4 @@
-defmodule Day8 do
+defmodule Day9 do
   @behaviour Runner.Day
   
   def read(file) do
