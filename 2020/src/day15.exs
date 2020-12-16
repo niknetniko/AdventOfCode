@@ -50,5 +50,3 @@ defmodule Day15 do
     |> IO.inspect()
   end
 end
-
-Day15.part1("2020/src/inputs/day15.txt")
