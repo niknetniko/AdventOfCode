@@ -14,6 +14,7 @@ defmodule Runner do
 
   def execute do
     [day, part, input] = System.argv()
+
     run(day, part, input)
     |> IO.inspect()
   end

@@ -25,10 +25,12 @@ defmodule Day02 do
 
   @impl true
   def part2(file) do
-    [h, d, _] = File.read!(file)
-    |> String.split("\n", trim: true)
-    |> Enum.map(&split_command/1)
-    |> Enum.reduce([0, 0, 0], &apply_command2/2)
+    [h, d, _] =
+      File.read!(file)
+      |> String.split("\n", trim: true)
+      |> Enum.map(&split_command/1)
+      |> Enum.reduce([0, 0, 0], &apply_command2/2)
+
     h * d
   end
 end
