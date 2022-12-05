@@ -8,10 +8,10 @@
 
 #include "day1.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     // 1 for the program name, plus 3 for the required params.
     if (argc != 4) {
-        char *program_name = argv[0];
+        char* program_name = argv[0];
         printf("Usage: %s day part input\n", program_name);
         printf("  day:   number of day to run, e.g. 15\n");
         printf("  part:  part of day to run, e.g. 1\n");
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     // For ease of use, we create on big executable.
     // TODO: this can be smarter with a macro
 
-    char *result;
+    char* result;
     if (strcmp(argv[1], "1") == 0) {
         if (strcmp(argv[2], "1") == 0) {
             result = day1_part1(argv[3]);

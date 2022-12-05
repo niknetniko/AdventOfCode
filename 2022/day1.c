@@ -15,12 +15,12 @@ List calculate_elf_sums(const char* input) {
     List elf_sums = list_create_int_list(10);
 
     // Keep an array of the lines for the current elf.
-    List lines = list_create(5, sizeof(char *));
+    List lines = list_create(5, sizeof(char*));
 
     // The current line we are reading.
     List current_line = list_create_string(5);
 
-    FILE *input_file = fopen(input, "rw");
+    FILE* input_file = fopen(input, "rw");
     int previous_char;
     int input_char;
     while ((input_char = fgetc(input_file)) != EOF) {
@@ -31,7 +31,7 @@ List calculate_elf_sums(const char* input) {
                 // We must now sum all lines.
                 int sum = 0;
                 for (size_t i = 0; i < lines.length; ++i) {
-                    char *line = list_get(&lines, i);
+                    char* line = list_get(&lines, i);
                     int number = atoi(line); // NOLINT(cert-err34-c)
                     sum += number;
                 }
@@ -56,7 +56,7 @@ List calculate_elf_sums(const char* input) {
 }
 
 
-char *day1_part1(const char *input) {
+char* day1_part1(const char* input) {
     List elf_sums = calculate_elf_sums(input);
     int max_calories = list_int_max(&elf_sums);
     list_destroy(&elf_sums);
@@ -64,7 +64,7 @@ char *day1_part1(const char *input) {
     return int_to_string(max_calories);
 }
 
-char *day1_part2(const char *input) {
+char* day1_part2(const char* input) {
     List elf_sums = calculate_elf_sums(input);
     list_int_sort(&elf_sums, false);
     List top_three = list_view(&elf_sums, 0, 3);

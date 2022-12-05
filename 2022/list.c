@@ -184,7 +184,8 @@ List list_view(const List* list, size_t start, size_t length) {
 }
 
 void list_int_print(const List* list) {
-    printf("Int list: {.length = %zu, .capacity = %zu, .element_size = %zu}\n", list->length, list->capacity, list->capacity);
+    printf("Int list: {.length = %zu, .capacity = %zu, .element_size = %zu}\n", list->length, list->capacity,
+           list->capacity);
     printf("[");
     for (size_t i = 0; i < list->length; ++i) {
         int value = list_get_int(list, i);
