@@ -5,14 +5,12 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include "day1.h"
 #include "list.h"
+#include "utils.h"
 
-
-char *day1_part1(const char *input) {
-
+List calculate_elf_sums(const char* input) {
     // Keep an array with the sum for each elf.
     List elf_sums = list_create_int_list(10);
 
@@ -51,19 +49,28 @@ char *day1_part1(const char *input) {
         previous_char = input_char;
     }
 
-    int max_calories = list_int_max(&elf_sums);
-
-    char *result = malloc((int) ((ceil(log10(max_calories)) + 1) * sizeof(char)));
-    snprintf(result, (int) (ceil(log10(max_calories)) + 1), "%d", max_calories);
-
-    // Free the memory.
-    list_destroy(&elf_sums);
     list_destroy_and_free_contents(&lines);
     list_destroy(&current_line);
 
-    return result;
+    return elf_sums;
+}
+
+
+char *day1_part1(const char *input) {
+    List elf_sums = calculate_elf_sums(input);
+    int max_calories = list_int_max(&elf_sums);
+    list_destroy(&elf_sums);
+
+    return int_to_string(max_calories);
 }
 
 char *day1_part2(const char *input) {
-    return NULL;
+    List elf_sums = calculate_elf_sums(input);
+    list_int_sort(&elf_sums, false);
+    List top_three = list_view(&elf_sums, 0, 3);
+
+    int sum_calories = list_int_sum(&top_three);
+    list_destroy(&elf_sums);
+
+    return int_to_string(sum_calories);
 }

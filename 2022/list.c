@@ -141,3 +141,63 @@ void list_clear_and_free_contents(List* list) {
     list_clear(list);
 }
 
+static int compare_ints_ascending(const void* a, const void* b) {
+    int arg1 = *(const int*) a;
+    int arg2 = *(const int*) b;
+
+    if (arg1 < arg2) return -1;
+    if (arg1 > arg2) return 1;
+    return 0;
+}
+
+static int compare_ints_descending(const void* a, const void* b) {
+    int arg1 = *(const int*) a;
+    int arg2 = *(const int*) b;
+
+    if (arg1 < arg2) return 1;
+    if (arg1 > arg2) return -1;
+    return 0;
+}
+
+void list_int_sort(List* list, bool ascending) {
+    if (ascending) {
+        qsort(list->data, list->length, list->element_size, compare_ints_ascending);
+    } else {
+        qsort(list->data, list->length, list->element_size, compare_ints_descending);
+    }
+}
+
+List list_view(const List* list, size_t start, size_t length) {
+    assert(0 <= start);
+    assert(start + length < list->length);
+    assert(list->data != NULL);
+
+    char* data = memory_of_index(list, start);
+
+    List result = {
+            .length = length,
+            .element_size = list->element_size,
+            .capacity = length,
+            .data = data
+    };
+    return result;
+}
+
+void list_int_print(const List* list) {
+    printf("Int list: {.length = %zu, .capacity = %zu, .element_size = %zu}\n", list->length, list->capacity, list->capacity);
+    printf("[");
+    for (size_t i = 0; i < list->length; ++i) {
+        int value = list_get_int(list, i);
+        printf("%zu: %d, ", i, value);
+    }
+    printf("]\n");
+}
+
+int list_int_sum(const List* list) {
+    int sum = 0;
+    for (size_t i = 0; i < list->length; ++i) {
+        sum += list_get_int(list, i);
+    }
+    return sum;
+}
+
