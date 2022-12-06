@@ -33,9 +33,10 @@ void list_append_char(List* list, char element);
 
 void list_append_int(List* list, int element);
 
-// Delete a list (but not the elements of the list itself.
+// Delete a list (but not the elements of the list itself).
 void list_destroy(List* list);
 
+// Delete a list and free its contents.
 void list_destroy_and_free_contents(List* list);
 
 // Remove content, but not the memory.
@@ -55,6 +56,8 @@ void* list_get(const List* list, size_t index);
 // Note that this list should not be freed, as the data is the same as the original list.
 // TODO: disallow editing this list...
 List list_view(const List* list, size_t start, size_t length);
+
+List* list_dynamic_copy(const List* list);
 
 // ======================
 // Some utility functions
@@ -79,6 +82,7 @@ bool list_char_contains(const List* haystack, char needle);
 
 // Create a new list containing the intersection of two lists.
 // You get ownership of the new list, so free it.
-List list_char_intersection(const List* a, const List* b);
+// YOU MUST PASS NULL AS THE LAST LIST!
+List list_char_intersection(const List* a, ...);
 
 #endif //ADVENTOFCODE_LIST_H

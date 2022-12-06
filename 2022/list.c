@@ -208,15 +208,35 @@ bool list_char_contains(const List* haystack, char needle) {
     return false;
 }
 
-List list_char_intersection(const List* a, const List* b) {
+List list_char_intersection(const List* a, ...) {
     List result = list_create_string(a->length);
+
+    va_list others;
 
     for (size_t i = 0; i < a->length; ++i) {
         char a_element = list_get_char(a, i);
-        if (list_char_contains(b, a_element)) {
+        bool is_in_all_others = true;
+
+        const List* other;
+        va_start(others, a);
+        while ((other = va_arg(others, const List*)) && is_in_all_others) {
+            is_in_all_others = list_char_contains(other, a_element) && is_in_all_others;
+        }
+
+        if (is_in_all_others) {
             list_append_char(&result, a_element);
         }
     }
 
     return result;
+}
+
+List* list_dynamic_copy(const List* list) {
+    List* copy = malloc(sizeof(List));
+    copy->length = list->length;
+    copy->element_size = list->element_size;
+    copy->capacity = list->element_size;
+    copy->data = malloc(copy->length * copy->element_size);
+    memcpy(copy->data, list->data, copy->length * copy->element_size);
+    return copy;
 }
