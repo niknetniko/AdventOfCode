@@ -1,0 +1,3 @@
+#!/bin/sh
+
+elixir -r "2021/src/interface.ex" -r "2021/src/day$1.ex" "2021/src/runner.exs"  "$@"

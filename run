@@ -1,3 +1,5 @@
 #!/bin/sh
 
-elixir -r "2021/src/interface.ex" -r "2021/src/day$1.ex" "2021/src/runner.exs"  "$@"
+(cd ./2022 && make main > /dev/null)
+./2022/main "$@"
+cd ..
