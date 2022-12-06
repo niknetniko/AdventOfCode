@@ -35,12 +35,11 @@ List list_create_int_list(size_t initial_capacity) {
     return list_create(initial_capacity, sizeof(int));
 }
 
-static char* memory_of_index(const List* list, size_t index) {
+char* list_memory_of_index(const List* list, size_t index) {
     return list->data + (index * list->element_size);
 }
 
-// The data is a pointer to raw memory.
-static void append(List* list, void* data) {
+void list_append(List* list, void* raw_data_pointer) {
     assert(list->data != NULL);
 
     if (list->capacity == list->length) {
@@ -55,28 +54,25 @@ static void append(List* list, void* data) {
     }
 
     // Insert the element in the array.
-    // We copy the memory pointed to by "data" into the slot we have for the data in the list.
-    char* destination = memory_of_index(list, list->length);
-    memcpy(destination, data, list->element_size);
+    // We copy the memory pointed to by "raw_data_pointer" into the slot we have for the raw_data_pointer in the list.
+    char* destination = list_memory_of_index(list, list->length);
+    memcpy(destination, raw_data_pointer, list->element_size);
     list->length++;
 }
 
-void list_append(List* list, void* element) {
-    assert(list->data != NULL);
+void list_append_pointer(List* list, void* element) {
     assert(list->element_size == sizeof(void*));
-    append(list, &element);
+    list_append(list, &element);
 }
 
 void list_append_char(List* list, char element) {
-    assert(list->data != NULL);
     assert(list->element_size == sizeof(char));
-    append(list, &element);
+    list_append(list, &element);
 }
 
 void list_append_int(List* list, int element) {
-    assert(list->data != NULL);
     assert(list->element_size == sizeof(int));
-    append(list, &element);
+    list_append(list, &element);
 }
 
 void list_destroy(List* list) {
@@ -92,15 +88,15 @@ void list_clear(List* list) {
 }
 
 void* list_get(const List* list, size_t index) {
-    return *((void**) memory_of_index(list, index));
+    return *((void**) list_memory_of_index(list, index));
 }
 
 char list_get_char(const List* list, size_t index) {
-    return *((char*) memory_of_index(list, index));
+    return *((char*) list_memory_of_index(list, index));
 }
 
 int list_get_int(const List* list, size_t index) {
-    return *((int*) memory_of_index(list, index));
+    return *((int*) list_memory_of_index(list, index));
 }
 
 char* as_null_delimited_string(const List* string) {
@@ -172,7 +168,7 @@ List list_view(const List* list, size_t start, size_t length) {
     assert(start + length < list->length);
     assert(list->data != NULL);
 
-    char* data = memory_of_index(list, start);
+    char* data = list_memory_of_index(list, start);
 
     List result = {
             .length = length,

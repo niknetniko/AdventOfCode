@@ -25,7 +25,9 @@ List list_create_string(size_t initial_capacity);
 
 List list_create_int_list(size_t initial_capacity);
 
-void list_append(List* list, void* element);
+void list_append(List* list, void* raw_data_pointer);
+
+void list_append_pointer(List* list, void* element);
 
 void list_append_char(List* list, char element);
 
@@ -40,6 +42,8 @@ void list_destroy_and_free_contents(List* list);
 void list_clear(List* list);
 
 void list_clear_and_free_contents(List* list);
+
+char* list_memory_of_index(const List* list, size_t index);
 
 char list_get_char(const List* list, size_t index);
 

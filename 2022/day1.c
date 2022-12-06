@@ -40,7 +40,7 @@ List calculate_elf_sums(const char* input) {
 
             } else {
                 // We have a new line within the same elf.
-                list_append(&lines, as_null_delimited_string(&current_line));
+                list_append_pointer(&lines, as_null_delimited_string(&current_line));
                 list_clear(&current_line);
             }
         } else {
