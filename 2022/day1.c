@@ -56,7 +56,7 @@ List calculate_elf_sums(const char* input) {
 }
 
 
-char* day1_part1(const char* input) {
+__attribute__((unused)) char* day1_part1(const char* input) {
     List elf_sums = calculate_elf_sums(input);
     int max_calories = list_int_max(&elf_sums);
     list_destroy(&elf_sums);
@@ -64,7 +64,7 @@ char* day1_part1(const char* input) {
     return int_to_string(max_calories);
 }
 
-char* day1_part2(const char* input) {
+__attribute__((unused)) char* day1_part2(const char* input) {
     List elf_sums = calculate_elf_sums(input);
     list_int_sort(&elf_sums, false);
     List top_three = list_view(&elf_sums, 0, 3);

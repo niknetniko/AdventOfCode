@@ -5,10 +5,10 @@
 
 #include "day2.h"
 
-char* day2_part1(const char* input) {
+__attribute__((unused)) char* day2_part1(const char* input) {
     return NULL;
 }
 
-char* day2_part2(const char* input) {
+__attribute__((unused)) char* day2_part2(const char* input) {
     return NULL;
 }
