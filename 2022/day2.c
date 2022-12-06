@@ -1,7 +1,6 @@
 //
 // Created by niko on 6/12/22.
 //
-#include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -11,15 +10,19 @@
 #include "utils.h"
 
 typedef enum Play {
-    ROCK, PAPER, SCISSORS
+    ROCK = 'X', PAPER = 'Y', SCISSORS = 'Z'
 } Play;
 
-Play letter_to_play(char letter) {
-    if (letter == 'A' || letter == 'X') {
+typedef enum Outcome {
+    LOSS = 'X', DRAW = 'Y', WIN = 'Z'
+} Outcome;
+
+Play opponent_letter_to_play(char letter) {
+    if (letter == 'A') {
         return ROCK;
-    } else if (letter == 'B' || letter == 'Y') {
+    } else if (letter == 'B') {
         return PAPER;
-    } else if (letter == 'C' || letter == 'Z') {
+    } else if (letter == 'C') {
         return SCISSORS;
     } else {
         // No.
@@ -38,15 +41,15 @@ int get_shape_score(Play play) {
     }
 }
 
-typedef struct Match {
+typedef struct MatchOrExpectedOutcome {
     Play opponent;
-    Play me;
-} Match;
+    char me;
+} MatchOrExpectedOutcome;
 
-int get_match_score(const Match* match) {
+int get_match_score(const MatchOrExpectedOutcome* match) {
     switch (match->opponent) {
         case ROCK:
-            switch (match->me) {
+            switch ((Play) match->me) {
                 case ROCK:
                     return 3;
                 case PAPER:
@@ -55,7 +58,7 @@ int get_match_score(const Match* match) {
                     return 0;
             }
         case PAPER:
-            switch (match->me) {
+            switch ((Play) match->me) {
                 case ROCK:
                     return 0;
                 case PAPER:
@@ -64,7 +67,7 @@ int get_match_score(const Match* match) {
                     return 6;
             }
         case SCISSORS:
-            switch (match->me) {
+            switch ((Play) match->me) {
                 case ROCK:
                     return 6;
                 case PAPER:
@@ -75,34 +78,73 @@ int get_match_score(const Match* match) {
     }
 }
 
-__attribute__((unused)) char* day2_part1(const char* input) {
-
-    // First, parse the day into a list of matches.
+List input_to_matches(const char* input) {
     // We just copy the struct into the list, since we are lazy :)
-    List matches = list_create(1000, sizeof(Match));
+    List matches = list_create(1000, sizeof(MatchOrExpectedOutcome));
 
     FILE* input_file = fopen(input, "rw");
     char line[5]; // One for opponent, one for space, one for me, one for newline and one for null byte.
     while (fgets(line, 5, input_file) != NULL) {
-        Match match = {.opponent = letter_to_play(line[0]), .me = letter_to_play(line[2])};
+        MatchOrExpectedOutcome match = {.opponent = opponent_letter_to_play(line[0]), .me = line[2]};
         assert(line[1] == ' ');
         assert(line[3] == '\n');
         assert(line[4] == '\0');
         list_append(&matches, &match);
     }
 
+    return matches;
+}
+
+__attribute__((unused)) char* day2_part1(const char* input) {
+
+    List matches = input_to_matches(input);
     int my_score = 0;
     for (size_t i = 0; i < matches.length; ++i) {
-        Match* match = (Match*) list_memory_of_index(&matches, i);
+        MatchOrExpectedOutcome* match = (MatchOrExpectedOutcome*) list_memory_of_index(&matches, i);
         my_score += get_match_score(match);
-        my_score += get_shape_score(match->me);
+        my_score += get_shape_score((Play) match->me);
     }
-
     list_destroy(&matches);
-
     return int_to_string(my_score);
 }
 
+Play expected_outcome_to_needed_play(MatchOrExpectedOutcome* match) {
+    switch ((Outcome) match->me) {
+        case LOSS:
+            switch (match->opponent) {
+                case ROCK:
+                    return SCISSORS;
+                case PAPER:
+                    return ROCK;
+                case SCISSORS:
+                    return PAPER;
+            }
+        case DRAW:
+            return match->opponent;
+        case WIN:
+            switch (match->opponent) {
+                case ROCK:
+                    return PAPER;
+                case PAPER:
+                    return SCISSORS;
+                case SCISSORS:
+                    return ROCK;
+            }
+    }
+}
+
 __attribute__((unused)) char* day2_part2(const char* input) {
-    return NULL;
+    List matches = input_to_matches(input);
+    int my_score = 0;
+    for (size_t i = 0; i < matches.length; ++i) {
+        MatchOrExpectedOutcome* expected_outcome = (MatchOrExpectedOutcome*) list_memory_of_index(&matches, i);
+        MatchOrExpectedOutcome actual_match = {
+                .opponent = expected_outcome->opponent,
+                .me = expected_outcome_to_needed_play(expected_outcome)
+        };
+        my_score += get_match_score(&actual_match);
+        my_score += get_shape_score(actual_match.me);
+    }
+    list_destroy(&matches);
+    return int_to_string(my_score);
 }
