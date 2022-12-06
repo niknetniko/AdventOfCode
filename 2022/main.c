@@ -11,6 +11,7 @@
 
 #include "day1.h"
 #include "day2.h"
+#include "day3.h"
 
 // day1_part1
 
@@ -22,7 +23,7 @@
     }                                                   \
     })
 
-const int max_day = 2;
+const int max_day = 3;
 
 int main(int argc, char** argv) {
     // 1 for the program name, plus 3 for the required params.
@@ -61,6 +62,9 @@ int main(int argc, char** argv) {
             break;
         case 2:
             PART_CALL(2);
+            break;
+        case 3:
+            PART_CALL(3);
             break;
         default:
             // No.

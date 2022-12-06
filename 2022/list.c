@@ -165,7 +165,7 @@ void list_int_sort(List* list, bool ascending) {
 
 List list_view(const List* list, size_t start, size_t length) {
     assert(0 <= start);
-    assert(start + length < list->length);
+    assert(start + length <= list->length);
     assert(list->data != NULL);
 
     char* data = list_memory_of_index(list, start);
@@ -198,3 +198,25 @@ int list_int_sum(const List* list) {
     return sum;
 }
 
+bool list_char_contains(const List* haystack, char needle) {
+    for (size_t i = 0; i < haystack->length; ++i) {
+        char element = list_get_char(haystack, i);
+        if (element == needle) {
+            return true;
+        }
+    }
+    return false;
+}
+
+List list_char_intersection(const List* a, const List* b) {
+    List result = list_create_string(a->length);
+
+    for (size_t i = 0; i < a->length; ++i) {
+        char a_element = list_get_char(a, i);
+        if (list_char_contains(b, a_element)) {
+            list_append_char(&result, a_element);
+        }
+    }
+
+    return result;
+}

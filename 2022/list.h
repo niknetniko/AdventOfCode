@@ -54,7 +54,7 @@ void* list_get(const List* list, size_t index);
 // Get a slice of the list.
 // Note that this list should not be freed, as the data is the same as the original list.
 // TODO: disallow editing this list...
-List list_view(const List* list, size_t start, size_t end);
+List list_view(const List* list, size_t start, size_t length);
 
 // ======================
 // Some utility functions
@@ -74,5 +74,11 @@ int list_int_sum(const List* list);
 // Sort the list with ints in place.
 void list_int_sort(List* list, bool ascending);
 
+// Check if a char list contains a char.
+bool list_char_contains(const List* haystack, char needle);
+
+// Create a new list containing the intersection of two lists.
+// You get ownership of the new list, so free it.
+List list_char_intersection(const List* a, const List* b);
 
 #endif //ADVENTOFCODE_LIST_H
