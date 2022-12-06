@@ -1,3 +1,5 @@
 # Don't include inputs in git
 
 *.txt
+*.o
+main
