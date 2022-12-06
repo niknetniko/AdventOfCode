@@ -9,7 +9,12 @@
 #include "utils.h"
 
 char* int_to_string(int number) {
-    char* result = malloc((int) ((ceil(log10(number)) + 1) * sizeof(char)));
-    snprintf(result, (int) (ceil(log10(number)) + 1), "%d", number);
+    size_t size = (size_t) (ceil(log10(number)) + 1);
+    if (number < 0) {
+        // For the "-"
+        size += 1;
+    }
+    char* result = malloc(size * sizeof(char));
+    snprintf(result, size, "%d", number);
     return result;
 }
