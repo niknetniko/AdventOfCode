@@ -81,7 +81,6 @@ __attribute__((unused)) char* day3_part2(const char* input) {
                     free(line);
                 }
                 list_clear(&current_group);
-
             }
             list_clear(&current_line);
         } else {
