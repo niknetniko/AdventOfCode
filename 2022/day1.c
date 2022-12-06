@@ -20,7 +20,7 @@ List calculate_elf_sums(const char* input) {
     // The current line we are reading.
     List current_line = list_create_string(5);
 
-    FILE* input_file = fopen(input, "rw");
+    FILE* input_file = open_file_for_reading(input);
     int previous_char;
     int input_char;
     while ((input_char = fgetc(input_file)) != EOF) {

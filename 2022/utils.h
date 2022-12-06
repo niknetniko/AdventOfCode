@@ -7,4 +7,6 @@
 
 char* int_to_string(int number);
 
+FILE* open_file_for_reading(const char* location);
+
 #endif //ADVENTOFCODE_UTILS_H

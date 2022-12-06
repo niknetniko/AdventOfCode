@@ -82,7 +82,7 @@ List input_to_matches(const char* input) {
     // We just copy the struct into the list, since we are lazy :)
     List matches = list_create(1000, sizeof(MatchOrExpectedOutcome));
 
-    FILE* input_file = fopen(input, "rw");
+    FILE* input_file = open_file_for_reading(input);
     char line[5]; // One for opponent, one for space, one for me, one for newline and one for null byte.
     while (fgets(line, 5, input_file) != NULL) {
         MatchOrExpectedOutcome match = {.opponent = opponent_letter_to_play(line[0]), .me = line[2]};
