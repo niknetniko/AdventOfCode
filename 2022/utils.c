@@ -10,14 +10,16 @@
 #include "utils.h"
 #include "list.h"
 
-char* int_to_string(int number) {
-    size_t size = (size_t) (ceil(log10(number)) + 1);
-    if (number < 0) {
-        // For the "-"
-        size += 1;
+char* int_to_string(int original_number) {
+    // Division is mostly faster for small values, which we have.
+    int number_of_digits = original_number < 0 ? 2 : 1;
+    int number = abs(original_number);
+    while (number != 0) {
+        number /= 10;
+        number_of_digits++;
     }
-    char* result = malloc(size * sizeof(char));
-    snprintf(result, size, "%d", number);
+    char* result = malloc(number_of_digits * sizeof(char));
+    snprintf(result, number_of_digits, "%d", original_number);
     return result;
 }
 
