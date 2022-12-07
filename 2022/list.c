@@ -240,3 +240,24 @@ List* list_dynamic_copy(const List* list) {
     memcpy(copy->data, list->data, copy->length * copy->element_size);
     return copy;
 }
+
+void list_reverse(List* list) {
+    // Move from both edges to the middle.
+
+    // Temp storage for raw data.
+    char* temp_storage = malloc(list->element_size);
+
+    for (size_t i = 0; i < list->length / 2; i++) {
+        // This is raw data...
+        // Store the first element.
+        char* first_element = list_memory_of_index(list, i);
+        char* second_element = list_memory_of_index(list, list->length - 1 - i);
+        memcpy(temp_storage, first_element, list->element_size);
+        // Override the first element with the last element.
+        memcpy(first_element, second_element, list->element_size);
+        // Move the temp element back into the list.
+        memcpy(second_element, temp_storage, list->element_size);
+    }
+
+    free(temp_storage);
+}

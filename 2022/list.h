@@ -59,6 +59,8 @@ List list_view(const List* list, size_t start, size_t length);
 
 List* list_dynamic_copy(const List* list);
 
+void list_reverse(List* list);
+
 // ======================
 // Some utility functions
 // ======================
