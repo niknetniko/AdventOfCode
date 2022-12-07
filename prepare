@@ -1,3 +1,3 @@
 #!/bin/sh
 
-(cd ./2022 && make main > /dev/null)
+(cd ./2022 && make main_fast > /dev/null)
