@@ -66,6 +66,10 @@ bool does_a_include_b(const Interval* a, const Interval* b) {
     return a->start <= b->start && b->end <= a->end;
 }
 
+bool does_a_overlap_with_b(const Interval* a, const Interval* b) {
+    return a->start <= b->end && a->end >= b->start;
+}
+
 __attribute__((unused)) char* day4_part1(const char* input) {
     List pairs = input_to_pairs(input);
 
@@ -83,5 +87,17 @@ __attribute__((unused)) char* day4_part1(const char* input) {
 }
 
 __attribute__((unused)) char* day4_part2(const char* input) {
-    return NULL;
+    List pairs = input_to_pairs(input);
+
+    int overlapping = 0;
+    for (size_t i = 0; i < pairs.length; ++i) {
+        Pair* pair = (Pair*) list_memory_of_index(&pairs, i);
+        if (does_a_overlap_with_b(&pair->first, &pair->second) || does_a_overlap_with_b(&pair->second, &pair->first)) {
+            overlapping++;
+        }
+    }
+
+    list_destroy(&pairs);
+
+    return int_to_string(overlapping);
 }
