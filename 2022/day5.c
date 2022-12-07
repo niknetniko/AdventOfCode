@@ -14,7 +14,7 @@
 typedef struct Move {
     size_t from;
     size_t to;
-    long amount;
+    size_t amount;
 } Move;
 
 typedef struct CratesAndRearrangement {
@@ -105,8 +105,8 @@ void destroy_crates_and_arrangement(CratesAndRearrangement* data) {
     list_destroy(&data->moves);
 }
 
-void apply_move(List* stacks, Move* move) {
-    for (int i = 0; i < move->amount; ++i) {
+void apply_move_9000(List* stacks, Move* move) {
+    for (size_t i = 0; i < move->amount; ++i) {
         List* src_stack = (List*) list_memory_of_index(stacks, move->from - 1);
         List* dest_stack = (List*) list_memory_of_index(stacks, move->to - 1);
 
@@ -119,27 +119,60 @@ void apply_move(List* stacks, Move* move) {
     }
 }
 
+void apply_move_9001(List* stacks, Move* move) {
+    List* src_stack = (List*) list_memory_of_index(stacks, move->from - 1);
+    List* dest_stack = (List*) list_memory_of_index(stacks, move->to - 1);
+
+    // We know the data is chars, so we can directly use the raw data.
+    assert(src_stack->element_size == sizeof(char));
+    assert(dest_stack->element_size == sizeof(char));
+
+    // VLA :)
+    char to_move[move->amount];
+    memcpy(to_move, src_stack->data + (src_stack->length - move->amount), move->amount * sizeof(char));
+    src_stack->length = src_stack->length - move->amount;
+
+    // We could do this with one memcpy, but I am lazy.
+    for (size_t i = 0; i < move->amount; ++i) {
+        list_append_char(dest_stack, to_move[i]);
+    }
+}
+
+char* get_results(const List* stacks) {
+    char* result = malloc(sizeof(char) * stacks->length + 1);
+    for (size_t i = 0; i < stacks->length; ++i) {
+        List* stack = (List*) list_memory_of_index(stacks, i);
+        char top = list_get_char(stack, stack->length - 1);
+        result[i] = top;
+    }
+    result[stacks->length] = '\0';
+    return result;
+}
+
 __attribute__((unused)) char* day5_part1(const char* input) {
     CratesAndRearrangement parsed = parse_input(input);
 
     for (size_t i = 0; i < parsed.moves.length; ++i) {
         Move* move = (Move*) list_memory_of_index(&parsed.moves, i);
-        apply_move(&parsed.stack, move);
+        apply_move_9000(&parsed.stack, move);
     }
 
-    char* result = malloc(sizeof(char) * parsed.stack.length + 1);
-    for (size_t i = 0; i < parsed.stack.length; ++i) {
-        List* stack = (List*) list_memory_of_index(&parsed.stack, i);
-        char top = list_get_char(stack, stack->length - 1);
-        result[i] =  top;
-    }
-    result[parsed.stack.length] = '\0';
-
+    char* result = get_results(&parsed.stack);
     destroy_crates_and_arrangement(&parsed);
 
     return result;
 }
 
 __attribute__((unused)) char* day5_part2(const char* input) {
-    return NULL;
+    CratesAndRearrangement parsed = parse_input(input);
+
+    for (size_t i = 0; i < parsed.moves.length; ++i) {
+        Move* move = (Move*) list_memory_of_index(&parsed.moves, i);
+        apply_move_9001(&parsed.stack, move);
+    }
+
+    char* result = get_results(&parsed.stack);
+    destroy_crates_and_arrangement(&parsed);
+
+    return result;
 }
