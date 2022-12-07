@@ -5,6 +5,7 @@
 #ifndef ADVENTOFCODE_UTILS_H
 #define ADVENTOFCODE_UTILS_H
 
+#include <stdio.h>
 #include "list.h"
 
 // Convert an int to a string. You get ownership.
