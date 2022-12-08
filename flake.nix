@@ -30,6 +30,9 @@
               clang-tools
               gnumake
               valgrind
+              perf-tools
+              linuxPackages_latest.perf
+              hyperfine
             ];
             devshell.startup.link.text = ''
               mkdir -p "$PRJ_DATA_DIR/mix"

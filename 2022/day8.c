@@ -99,13 +99,6 @@ TreeGrid parse_to_grid(const char* input) {
     return grid;
 }
 
-void destroy_grid(TreeGrid* grid) {
-    for (size_t y = 0; y < grid->height; ++y) {
-        free(grid->grid[y]);
-    }
-    free(grid->grid);
-}
-
 __attribute__((unused)) char* day8_part1(const char* input) {
 
     TreeGrid grid = parse_to_grid(input);
@@ -121,8 +114,6 @@ __attribute__((unused)) char* day8_part1(const char* input) {
             }
         }
     }
-
-    destroy_grid(&grid);
 
     return size_t_to_string(visible);
 }
@@ -142,8 +133,6 @@ __attribute__((unused)) char* day8_part2(const char* input) {
             }
         }
     }
-
-    destroy_grid(&grid);
 
     return size_t_to_string(current_max);
 }
