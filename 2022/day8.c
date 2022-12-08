@@ -94,8 +94,6 @@ TreeGrid parse_to_grid(const char* input) {
         }
     }
 
-    destroy_file(&lines);
-
     return grid;
 }
 
