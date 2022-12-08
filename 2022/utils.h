@@ -10,6 +10,7 @@
 
 // Convert an int to a string. You get ownership.
 char* int_to_string(int number);
+char* size_t_to_string(size_t number);
 
 // Open a file for reading, while dealing with errors.
 // You gte ownership of the result.

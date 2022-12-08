@@ -23,6 +23,19 @@ char* int_to_string(int original_number) {
     return result;
 }
 
+char* size_t_to_string(size_t original_number) {
+    // Division is mostly faster for small values, which we have.
+    size_t number_of_digits = 1;
+    size_t number = original_number;
+    while (number != 0) {
+        number /= 10;
+        number_of_digits++;
+    }
+    char* result = malloc(number_of_digits * sizeof(char));
+    snprintf(result, number_of_digits, "%zu", original_number);
+    return result;
+}
+
 FILE* open_file_for_reading(const char* location) {
     errno = 0;
     FILE* input_file = fopen(location, "r");
