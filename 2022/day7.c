@@ -88,22 +88,17 @@ FsNode* parse_filesystem(const char* input) {
                         root->name = name;
                         root->parent = NULL;
                         root->children = list_create(10, sizeof(FsNode*));
-                        printf("Initialising ROOT directory at /\n");
-                    } else {
-                        printf("Going from %s to /\n", cwd->name);
                     }
                     cwd = root;
                 } else if (strcmp(name, "..") == 0) {
                     assert(cwd != NULL);
                     assert(cwd->parent != NULL);
-                    printf("Going up from %s to %s\n", cwd->name, cwd->parent->name);
                     cwd = cwd->parent;
                 } else {
                     bool was_added = false;
                     for (size_t j = 0; j < cwd->children.length; ++j) {
                         FsNode* child = list_get(&cwd->children, j);
                         if (strcmp(child->name, name) == 0 && child->type == DIRECTORY) {
-                            printf("Going down from %s to %s\n", cwd->name, child->name);
                             cwd = child;
                             was_added = true;
                             break;
@@ -131,7 +126,6 @@ FsNode* parse_filesystem(const char* input) {
                     new_directory->name = second;
                     new_directory->parent = cwd;
                     new_directory->children = list_create(10, sizeof(FsNode*));
-                    printf("Appending child %s (DIR) to %s\n", second, cwd->name);
                     list_append_pointer(&cwd->children, new_directory);
                 }
             } else {
@@ -148,7 +142,6 @@ FsNode* parse_filesystem(const char* input) {
                     new_directory->parent = cwd;
                     new_directory->size = (size_t) strtol(first, NULL, 10);
                     list_append_pointer(&cwd->children, new_directory);
-                    printf("Appending child %s (File) to %s\n", second, cwd->name);
                 }
             }
         }
@@ -191,8 +184,38 @@ __attribute__((unused)) char* day7_part1(const char* input) {
     return size_t_to_string(result);
 }
 
+FsNode* find_part2(FsNode* node, size_t at_least_size) {
+    if (node->type == DATA) {
+        return NULL;
+    }
+    // If we are too small, we can ignore any children.
+    if (node->total_size < at_least_size) {
+        return NULL;
+    }
+
+    FsNode* smallest_node = node;
+    // If we are big enough, we could be the one, but ask the children just in case.
+    for (size_t i = 0; i < node->children.length; ++i) {
+        FsNode* child = list_get(&node->children, i);
+        FsNode* to_delete = find_part2(child, at_least_size);
+        if (to_delete != NULL && to_delete->total_size < smallest_node->total_size) {
+            smallest_node = to_delete;
+        }
+    }
+
+    return smallest_node;
+}
+
 __attribute__((unused)) char* day7_part2(const char* input) {
-    return NULL;
+    FsNode* root = parse_filesystem(input);
+    size_t free_memory = 70000000 - root->total_size;
+    size_t to_delete_size = 30000000 - free_memory;
+
+    FsNode* to_delete = find_part2(root, to_delete_size);
+    size_t result = to_delete->total_size; // Rescue value from free
+    free_fs_tree(root);
+    free(root);
+    return size_t_to_string(result);
 }
 
 #pragma clang diagnostic pop
