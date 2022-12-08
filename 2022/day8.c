@@ -34,6 +34,27 @@ bool is_visible_from(TreeGrid grid, long x, long y, int x_delta, int y_delta) {
     return true;
 }
 
+size_t calculate_viewing_distance_for(TreeGrid grid, long x, long y, int x_delta, int y_delta) {
+    unsigned char tree_height = grid.grid[y][x];
+    size_t distance = 0;
+    x += x_delta;
+    y += y_delta;
+
+    while (0 <= x && (size_t) x < grid.width && 0 <= y && (size_t) y < grid.height) {
+        unsigned char new_height = grid.grid[y][x];
+        distance++;
+        if (new_height >= tree_height) {
+            // Done.
+            return distance;
+        }
+
+        x += x_delta;
+        y += y_delta;
+    }
+
+    return distance;
+}
+
 bool is_visible(TreeGrid grid, size_t x, size_t y) {
     return is_visible_from(grid, (long) x, (long) y, 0, 1) ||
            is_visible_from(grid, (long) x, (long) y, 1, 0) ||
@@ -41,8 +62,14 @@ bool is_visible(TreeGrid grid, size_t x, size_t y) {
            is_visible_from(grid, (long) x, (long) y, -1, 0);
 }
 
-char* day8_part1(const char* input) {
+size_t calculate_viewing_distance(TreeGrid grid, size_t x, size_t y) {
+    return calculate_viewing_distance_for(grid, (long) x, (long) y, 0, 1) *
+           calculate_viewing_distance_for(grid, (long) x, (long) y, 1, 0) *
+           calculate_viewing_distance_for(grid, (long) x, (long) y, 0, -1) *
+           calculate_viewing_distance_for(grid, (long) x, (long) y, -1, 0);
+}
 
+TreeGrid parse_to_grid(const char* input) {
     File lines = read_lines(input);
     size_t height = lines.lines.length;
     size_t width = ((List*) list_get(&lines.lines, 0))->length;
@@ -67,21 +94,56 @@ char* day8_part1(const char* input) {
         }
     }
 
+    destroy_file(&lines);
+
+    return grid;
+}
+
+void destroy_grid(TreeGrid* grid) {
+    for (size_t y = 0; y < grid->height; ++y) {
+        free(grid->grid[y]);
+    }
+    free(grid->grid);
+}
+
+__attribute__((unused)) char* day8_part1(const char* input) {
+
+    TreeGrid grid = parse_to_grid(input);
+
     // To count the visible trees, don't count the outer edge.
     // Top and bottom rows = width * 2, left and right = height * 2, but minus 2 for the corners.
-    size_t visible = width * 2 + (height - 2) * 2;
+    size_t visible = grid.width * 2 + (grid.height - 2) * 2;
 
-    for (size_t y = 1; y < height - 1; ++y) {
-        for (size_t x = 1; x < width - 1; ++x) {
+    for (size_t y = 1; y < grid.height - 1; ++y) {
+        for (size_t x = 1; x < grid.width - 1; ++x) {
             if (is_visible(grid, x, y)) {
                 visible++;
             }
         }
     }
 
+    destroy_grid(&grid);
+
     return size_t_to_string(visible);
 }
 
-char* day8_part2(const char* input) {
-    return NULL;
+__attribute__((unused)) char* day8_part2(const char* input) {
+    TreeGrid grid = parse_to_grid(input);
+
+    // To count the visible trees, don't count the outer edge.
+    // Top and bottom rows = width * 2, left and right = height * 2, but minus 2 for the corners.
+    size_t current_max = 0;
+
+    for (size_t y = 0; y < grid.height; ++y) {
+        for (size_t x = 0; x < grid.width; ++x) {
+            size_t view_distance = calculate_viewing_distance(grid, x, y);
+            if (view_distance > current_max) {
+                current_max = view_distance;
+            }
+        }
+    }
+
+    destroy_grid(&grid);
+
+    return size_t_to_string(current_max);
 }
