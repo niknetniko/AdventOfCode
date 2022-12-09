@@ -82,6 +82,8 @@ void list_int_sort(List* list, bool ascending);
 // Check if a char list contains a char.
 bool list_char_contains(const List* haystack, char needle);
 
+bool list_contains(const List* haystack, char* raw_needle_pointer);
+
 // Create a new list containing the intersection of two lists.
 // You get ownership of the new list, so free it.
 // YOU MUST PASS NULL AS THE LAST LIST!

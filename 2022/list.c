@@ -208,6 +208,16 @@ bool list_char_contains(const List* haystack, char needle) {
     return false;
 }
 
+bool list_contains(const List* haystack, char* raw_needle_pointer) {
+    for (size_t i = 0; i < haystack->length; ++i) {
+        void* element = list_memory_of_index(haystack, i);
+        if (memcmp(element, raw_needle_pointer, haystack->element_size) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 List list_char_intersection(const List* a, ...) {
     List result = list_create_string(a->length);
 
