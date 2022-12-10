@@ -23,10 +23,10 @@
 // day1_part1
 
 #define PART_CALL(day_param) ({                         \
-    if (strcmp(argv[2], "1") == 0) {                    \
-        implementation = &day ## day_param ## _part1;   \
+    if (argv[2][0] == '1') {                            \
+        result = day ## day_param ## _part1(argv[3]);   \
     } else {                                            \
-        implementation = &day ## day_param ## _part2;   \
+        result = day ## day_param ## _part2(argv[3]);   \
     }                                                   \
     })
 
@@ -55,14 +55,12 @@ int main(int argc, char** argv) {
     }
 
     // For ease of use, we create on big executable.
-    if ((strcmp(argv[2], "1") != 0 && (strcmp(argv[2], "2") != 0))) {
+    if (argv[2][0] != '1' && argv[2][0] != '2') {
         fprintf(stderr, "Part %s is not a valid part, must be 1 or 2", argv[1]);
         return EXIT_FAILURE;
     }
 
-    // This cannot be a macro, since the day part is dynamic.
-    char* (* implementation)(const char*);
-
+    char* result;
     switch (day) {
         case 1:
             PART_CALL(1);
@@ -99,9 +97,7 @@ int main(int argc, char** argv) {
             assert(false);
     }
 
-    char* result = implementation(argv[3]);
     printf("%s\n", result);
-    free(result);
 
     return EXIT_SUCCESS;
 }

@@ -36,8 +36,7 @@ List calculate_elf_sums(const char* input) {
                     sum += number;
                 }
                 list_append_int(&elf_sums, sum);
-                list_clear_and_free_contents(&lines);
-
+                list_clear(&lines);
             } else {
                 // We have a new line within the same elf.
                 list_append_pointer(&lines, as_null_delimited_string(&current_line));
@@ -49,9 +48,6 @@ List calculate_elf_sums(const char* input) {
         previous_char = input_char;
     }
 
-    list_destroy_and_free_contents(&lines);
-    list_destroy(&current_line);
-
     return elf_sums;
 }
 
@@ -59,8 +55,6 @@ List calculate_elf_sums(const char* input) {
 __attribute__((unused)) char* day1_part1(const char* input) {
     List elf_sums = calculate_elf_sums(input);
     int max_calories = list_int_max(&elf_sums);
-    list_destroy(&elf_sums);
-
     return int_to_string(max_calories);
 }
 
@@ -68,9 +62,6 @@ __attribute__((unused)) char* day1_part2(const char* input) {
     List elf_sums = calculate_elf_sums(input);
     list_int_sort(&elf_sums, false);
     List top_three = list_view(&elf_sums, 0, 3);
-
     int sum_calories = list_int_sum(&top_three);
-    list_destroy(&elf_sums);
-
     return int_to_string(sum_calories);
 }
