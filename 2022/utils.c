@@ -89,3 +89,16 @@ void destroy_file(File* file) {
     }
     list_destroy(&file->lines);
 }
+
+char* long_to_string(long original_number) {
+    // Division is mostly faster for small values, which we have.
+    int number_of_digits = original_number < 0 ? 2 : 1;
+    long number = labs(original_number);
+    while (number != 0) {
+        number /= 10;
+        number_of_digits++;
+    }
+    char* result = malloc(number_of_digits * sizeof(char));
+    snprintf(result, number_of_digits, "%ld", original_number);
+    return result;
+}
