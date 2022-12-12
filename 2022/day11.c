@@ -134,6 +134,18 @@ List parse_monkeys(const char* input) {
     return list_of_monkeys;
 }
 
+char* get_number_of_inspections(const List* monkeys) {
+    List number_of_inspections = list_create(monkeys->length, sizeof(size_t));
+
+    for (size_t m = 0; m < monkeys->length; ++m) {
+        Monkey* monkey = (Monkey*) list_get_raw(monkeys, m);
+        list_append(&number_of_inspections, &monkey->inspected_objects);
+    }
+
+    list_size_t_sort(&number_of_inspections, false);
+    size_t result = *((size_t*) list_get_raw(&number_of_inspections, 0)) * *((size_t*) list_get_raw(&number_of_inspections, 1));
+    return size_t_to_string(result);
+}
 
 __attribute__((unused)) char* day11_part1(const char* input) {
     List list_of_monkeys = parse_monkeys(input);
@@ -144,21 +156,12 @@ __attribute__((unused)) char* day11_part1(const char* input) {
         }
     }
 
-    // TODO: should be size_t list
-    List number_of_inspections = list_create_int_list(list_of_monkeys.length);
-
-    for (size_t m = 0; m < list_of_monkeys.length; ++m) {
-        Monkey* monkey = (Monkey*) list_get_raw(&list_of_monkeys, m);
-        list_append_int(&number_of_inspections, (int) monkey->inspected_objects);
-    }
-
-    list_int_sort(&number_of_inspections, false);
-    int result = list_get_int(&number_of_inspections, 0) * list_get_int(&number_of_inspections, 1);
-    return int_to_string(result);
+    return get_number_of_inspections(&list_of_monkeys);
 }
 
 __attribute__((unused)) char* day11_part2(const char* input) {
     List list_of_monkeys = parse_monkeys(input);
+
     // To make the numbers smaller while not affecting the logic, we need to make sure that all
     // of the tests still pass, ie. the number can be modulus the lcm of all "divide by" tests.
     // Thanks to a hint on Reddit, it becomes obvious all "divide by" tests are prime,
@@ -175,14 +178,5 @@ __attribute__((unused)) char* day11_part2(const char* input) {
         }
     }
 
-    List number_of_inspections = list_create(list_of_monkeys.length, sizeof(size_t));
-
-    for (size_t m = 0; m < list_of_monkeys.length; ++m) {
-        Monkey* monkey = (Monkey*) list_get_raw(&list_of_monkeys, m);
-        list_append(&number_of_inspections, &monkey->inspected_objects);
-    }
-
-    list_size_t_sort(&number_of_inspections, false);
-    size_t result = *((size_t*) list_get_raw(&number_of_inspections, 0)) * *((size_t*) list_get_raw(&number_of_inspections, 1));
-    return size_t_to_string(result);
+    return get_number_of_inspections(&list_of_monkeys);
 }
