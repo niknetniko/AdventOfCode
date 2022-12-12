@@ -44,13 +44,15 @@ void list_clear(List* list);
 
 void list_clear_and_free_contents(List* list);
 
-char* list_memory_of_index(const List* list, size_t index);
+char* list_get_raw(const List* list, size_t index);
+
+char* list_pop_raw(List* list, size_t index);
 
 char list_get_char(const List* list, size_t index);
 
 int list_get_int(const List* list, size_t index);
 
-void* list_get(const List* list, size_t index);
+void* list_get_pointer(const List* list, size_t index);
 
 // Get a slice of the list.
 // Note that this list should not be freed, as the data is the same as the original list.
@@ -78,6 +80,7 @@ int list_int_sum(const List* list);
 
 // Sort the list with ints in place.
 void list_int_sort(List* list, bool ascending);
+void list_size_t_sort(List* list, bool ascending);
 
 // Check if a char list contains a char.
 bool list_char_contains(const List* haystack, char needle);

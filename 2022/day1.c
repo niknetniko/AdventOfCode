@@ -31,7 +31,7 @@ List calculate_elf_sums(const char* input) {
                 // We must now sum all lines.
                 int sum = 0;
                 for (size_t i = 0; i < lines.length; ++i) {
-                    char* line = list_get(&lines, i);
+                    char* line = list_get_pointer(&lines, i);
                     int number = atoi(line); // NOLINT(cert-err34-c)
                     sum += number;
                 }

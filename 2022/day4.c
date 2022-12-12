@@ -75,7 +75,7 @@ __attribute__((unused)) char* day4_part1(const char* input) {
 
     int overlapping = 0;
     for (size_t i = 0; i < pairs.length; ++i) {
-        Pair* pair = (Pair*) list_memory_of_index(&pairs, i);
+        Pair* pair = (Pair*) list_get_raw(&pairs, i);
         if (does_a_include_b(&pair->first, &pair->second) || does_a_include_b(&pair->second, &pair->first)) {
             overlapping++;
         }
@@ -91,7 +91,7 @@ __attribute__((unused)) char* day4_part2(const char* input) {
 
     int overlapping = 0;
     for (size_t i = 0; i < pairs.length; ++i) {
-        Pair* pair = (Pair*) list_memory_of_index(&pairs, i);
+        Pair* pair = (Pair*) list_get_raw(&pairs, i);
         if (does_a_overlap_with_b(&pair->first, &pair->second) || does_a_overlap_with_b(&pair->second, &pair->first)) {
             overlapping++;
         }

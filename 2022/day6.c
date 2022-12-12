@@ -40,7 +40,7 @@ __attribute__((unused))  char* day6_part1(const char* input) {
     File file = read_lines(input);
     assert(file.lines.length == 1);
 
-    List* line = list_get(&file.lines, 0);
+    List* line = list_get_pointer(&file.lines, 0);
     int result = calculate(line, 4);
     destroy_file(&file);
 
@@ -51,7 +51,7 @@ __attribute__((unused)) char* day6_part2(const char* input) {
     File file = read_lines(input);
     assert(file.lines.length == 1);
 
-    List* line = list_get(&file.lines, 0);
+    List* line = list_get_pointer(&file.lines, 0);
     int result = calculate(line, 14);
     destroy_file(&file);
 

@@ -83,7 +83,7 @@ void destroy_file(File* file) {
 
     // We must clear the current group, meaning we should free all nested lists first.
     for (size_t i = 0; i < file->lines.length; ++i) {
-        List* line = list_get(&file->lines, i);
+        List* line = list_get_pointer(&file->lines, i);
         list_destroy(line);
         free(line);
     }

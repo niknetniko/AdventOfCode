@@ -72,7 +72,7 @@ size_t calculate_viewing_distance(TreeGrid grid, size_t x, size_t y) {
 TreeGrid parse_to_grid(const char* input) {
     File lines = read_lines(input);
     size_t height = lines.lines.length;
-    size_t width = ((List*) list_get(&lines.lines, 0))->length;
+    size_t width = ((List*) list_get_pointer(&lines.lines, 0))->length;
 
     TreeGrid grid = {
             .width = width,
@@ -82,7 +82,7 @@ TreeGrid parse_to_grid(const char* input) {
 
     // Parse the input into a grid.
     for (size_t i = 0; i < height; ++i) {
-        List* line = (List*) list_get(&lines.lines, i);
+        List* line = (List*) list_get_pointer(&lines.lines, i);
         assert(line->length == width);
         grid.grid[i] = malloc(sizeof(unsigned char) * width);
         for (size_t j = 0; j < width; ++j) {

@@ -19,6 +19,7 @@
 #include "day8.h"
 #include "day9.h"
 #include "day10.h"
+#include "day11.h"
 
 // day1_part1
 
@@ -29,8 +30,6 @@
         result = day ## day_param ## _part2(argv[3]);   \
     }                                                   \
     })
-
-const int max_day = 10;
 
 int main(int argc, char** argv) {
     // 1 for the program name, plus 3 for the required params.
@@ -49,8 +48,8 @@ int main(int argc, char** argv) {
     long day = strtol(argv[1], &end, 10);
 
     // The day was not a number.
-    if (*end != '\0' || errno != 0 || day > max_day) {
-        fprintf(stderr, "Day %s is not a valid day, must be in range [1-%d]", argv[1], max_day);
+    if (*end != '\0' || errno != 0) {
+        fprintf(stderr, "Day %s is not a valid day", argv[1]);
         return EXIT_FAILURE;
     }
 
@@ -92,9 +91,12 @@ int main(int argc, char** argv) {
         case 10:
             PART_CALL(10);
             break;
+        case 11:
+            PART_CALL(11);
+            break;
         default:
-            // No.
-            assert(false);
+            fprintf(stderr, "Day %s is not a valid day", argv[1]);
+            return EXIT_FAILURE;
     }
 
     printf("%s\n", result);

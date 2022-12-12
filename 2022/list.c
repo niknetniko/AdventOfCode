@@ -35,8 +35,18 @@ List list_create_int_list(size_t initial_capacity) {
     return list_create(initial_capacity, sizeof(int));
 }
 
-char* list_memory_of_index(const List* list, size_t index) {
+char* list_get_raw(const List* list, size_t index) {
     return list->data + (index * list->element_size);
+}
+
+char* list_pop_raw(List* list, size_t index) {
+    char* existing_address = list_get_raw(list, index);
+    char* raw_data = malloc(list->element_size);
+    memcpy(raw_data, existing_address, list->element_size);
+    // Remove the memory in the array, by moving it all forward.
+    memcpy(existing_address, existing_address + list->element_size, (list->length - index - 1) * list->element_size);
+    list->length--;
+    return raw_data;
 }
 
 void list_append(List* list, void* raw_data_pointer) {
@@ -55,7 +65,7 @@ void list_append(List* list, void* raw_data_pointer) {
 
     // Insert the element in the array.
     // We copy the memory pointed to by "raw_data_pointer" into the slot we have for the raw_data_pointer in the list.
-    char* destination = list_memory_of_index(list, list->length);
+    char* destination = list_get_raw(list, list->length);
     memcpy(destination, raw_data_pointer, list->element_size);
     list->length++;
 }
@@ -87,16 +97,16 @@ void list_clear(List* list) {
     list->length = 0;
 }
 
-void* list_get(const List* list, size_t index) {
-    return *((void**) list_memory_of_index(list, index));
+void* list_get_pointer(const List* list, size_t index) {
+    return *((void**) list_get_raw(list, index));
 }
 
 char list_get_char(const List* list, size_t index) {
-    return *((char*) list_memory_of_index(list, index));
+    return *((char*) list_get_raw(list, index));
 }
 
 int list_get_int(const List* list, size_t index) {
-    return *((int*) list_memory_of_index(list, index));
+    return *((int*) list_get_raw(list, index));
 }
 
 char* as_null_delimited_string(const List* string) {
@@ -122,7 +132,7 @@ int list_int_max(const List* list) {
 void list_destroy_and_free_contents(List* list) {
     assert(list->element_size == sizeof(void*));
     for (size_t i = 0; i < list->length; ++i) {
-        void* element = list_get(list, i);
+        void* element = list_get_pointer(list, i);
         free(element);
     }
     list_destroy(list);
@@ -131,7 +141,7 @@ void list_destroy_and_free_contents(List* list) {
 void list_clear_and_free_contents(List* list) {
     assert(list->element_size == sizeof(void*));
     for (size_t i = 0; i < list->length; ++i) {
-        void* element = list_get(list, i);
+        void* element = list_get_pointer(list, i);
         free(element);
     }
     list_clear(list);
@@ -163,12 +173,38 @@ void list_int_sort(List* list, bool ascending) {
     }
 }
 
+static int compare_size_t_ascending(const void* a, const void* b) {
+    size_t arg1 = *(const size_t*) a;
+    size_t arg2 = *(const size_t*) b;
+
+    if (arg1 < arg2) return -1;
+    if (arg1 > arg2) return 1;
+    return 0;
+}
+
+static int compare_size_t_descending(const void* a, const void* b) {
+    size_t arg1 = *(const size_t*) a;
+    size_t arg2 = *(const size_t*) b;
+
+    if (arg1 < arg2) return 1;
+    if (arg1 > arg2) return -1;
+    return 0;
+}
+
+void list_size_t_sort(List* list, bool ascending) {
+    if (ascending) {
+        qsort(list->data, list->length, list->element_size, compare_ints_ascending);
+    } else {
+        qsort(list->data, list->length, list->element_size, compare_ints_descending);
+    }
+}
+
 List list_view(const List* list, size_t start, size_t length) {
     assert(0 <= start);
     assert(start + length <= list->length);
     assert(list->data != NULL);
 
-    char* data = list_memory_of_index(list, start);
+    char* data = list_get_raw(list, start);
 
     List result = {
             .length = length,
@@ -210,7 +246,7 @@ bool list_char_contains(const List* haystack, char needle) {
 
 bool list_contains(const List* haystack, char* raw_needle_pointer) {
     for (size_t i = 0; i < haystack->length; ++i) {
-        void* element = list_memory_of_index(haystack, i);
+        void* element = list_get_raw(haystack, i);
         if (memcmp(element, raw_needle_pointer, haystack->element_size) == 0) {
             return true;
         }
@@ -260,8 +296,8 @@ void list_reverse(List* list) {
     for (size_t i = 0; i < list->length / 2; i++) {
         // This is raw data...
         // Store the first element.
-        char* first_element = list_memory_of_index(list, i);
-        char* second_element = list_memory_of_index(list, list->length - 1 - i);
+        char* first_element = list_get_raw(list, i);
+        char* second_element = list_get_raw(list, list->length - 1 - i);
         memcpy(temp_storage, first_element, list->element_size);
         // Override the first element with the last element.
         memcpy(first_element, second_element, list->element_size);

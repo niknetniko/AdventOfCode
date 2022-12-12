@@ -18,7 +18,7 @@ __attribute__((unused)) char* day10_part1(const char* input) {
     for (size_t ip = 0; ip < file.lines.length; ++ip) {
         // We could parse everything first, but why would I?
         // If, in a future day, this needs to be expanded, we'll do it then.
-        char* line = as_null_delimited_string(list_get(&file.lines, ip));
+        char* line = as_null_delimited_string(list_get_pointer(&file.lines, ip));
 
         char* instruction = strtok(line, " ");
 
@@ -47,7 +47,7 @@ __attribute__((unused)) char* day10_part1(const char* input) {
 
     long sum = 0;
     for (size_t i = 0; i < saved_values.length; ++i) {
-        long* saved_value = (long*) list_memory_of_index(&saved_values, i);
+        long* saved_value = (long*) list_get_raw(&saved_values, i);
         sum += *saved_value;
     }
 
@@ -98,7 +98,7 @@ __attribute__((unused)) char* day10_part2(const char* input) {
     for (size_t ip = 0; ip < file.lines.length; ++ip) {
         // We could parse everything first, but why would I?
         // If, in a future day, this needs to be expanded, we'll do it then.
-        char* line = as_null_delimited_string(list_get(&file.lines, ip));
+        char* line = as_null_delimited_string(list_get_pointer(&file.lines, ip));
 
         char* instruction = strtok(line, " ");
 

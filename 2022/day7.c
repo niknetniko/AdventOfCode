@@ -38,7 +38,7 @@ void calculate_sizes(FsNode* directory) {
     directory->total_size = 0;
     for (size_t i = 0; i < directory->children.length; ++i) {
         // Fill in the child first.
-        FsNode* child = list_get(&directory->children, i);
+        FsNode* child = list_get_pointer(&directory->children, i);
         calculate_sizes(child);
         directory->total_size += child->total_size;
     }
@@ -51,7 +51,7 @@ void free_fs_tree(FsNode* directory) {
 
     for (size_t i = 0; i < directory->children.length; ++i) {
         // Fill in the child first.
-        FsNode* child = list_get(&directory->children, i);
+        FsNode* child = list_get_pointer(&directory->children, i);
         free_fs_tree(child);
         free(child);
     }
@@ -69,7 +69,7 @@ FsNode* parse_filesystem(const char* input) {
 
     for (size_t i = 0; i < file.lines.length; ++i) {
         // TODO: fix this memory leak, by copying the string...
-        char* line = as_null_delimited_string(list_get(&file.lines, i));
+        char* line = as_null_delimited_string(list_get_pointer(&file.lines, i));
         assert(cwd == NULL || cwd->type == DIRECTORY);
 
         // Handle a command
@@ -97,7 +97,7 @@ FsNode* parse_filesystem(const char* input) {
                 } else {
                     bool was_added = false;
                     for (size_t j = 0; j < cwd->children.length; ++j) {
-                        FsNode* child = list_get(&cwd->children, j);
+                        FsNode* child = list_get_pointer(&cwd->children, j);
                         if (strcmp(child->name, name) == 0 && child->type == DIRECTORY) {
                             cwd = child;
                             was_added = true;
@@ -117,7 +117,7 @@ FsNode* parse_filesystem(const char* input) {
                 // Check if the directory already has the child in question.
                 bool was_added_already = false;
                 for (size_t j = 0; j < cwd->children.length; ++j) {
-                    FsNode* child = list_get(&cwd->children, j);
+                    FsNode* child = list_get_pointer(&cwd->children, j);
                     was_added_already = (strcmp(child->name, second) == 0 && child->type == DIRECTORY) || was_added_already;
                 }
                 if (!was_added_already) {
@@ -132,7 +132,7 @@ FsNode* parse_filesystem(const char* input) {
                 // It is a file.
                 bool was_added_already = false;
                 for (size_t j = 0; j < cwd->children.length; ++j) {
-                    FsNode* child = list_get(&cwd->children, j);
+                    FsNode* child = list_get_pointer(&cwd->children, j);
                     was_added_already = (strcmp(child->name, second) == 0 && child->type == DATA) || was_added_already;
                 }
                 if (!was_added_already) {
@@ -168,7 +168,7 @@ size_t sum_part1(FsNode* directory) {
     // Allow children to be counted.
     for (size_t i = 0; i < directory->children.length; ++i) {
         // Fill in the child first.
-        FsNode* child = list_get(&directory->children, i);
+        FsNode* child = list_get_pointer(&directory->children, i);
         size_t child_sum = sum_part1(child);
         sum += child_sum;
     }
@@ -196,7 +196,7 @@ FsNode* find_part2(FsNode* node, size_t at_least_size) {
     FsNode* smallest_node = node;
     // If we are big enough, we could be the one, but ask the children just in case.
     for (size_t i = 0; i < node->children.length; ++i) {
-        FsNode* child = list_get(&node->children, i);
+        FsNode* child = list_get_pointer(&node->children, i);
         FsNode* to_delete = find_part2(child, at_least_size);
         if (to_delete != NULL && to_delete->total_size < smallest_node->total_size) {
             smallest_node = to_delete;

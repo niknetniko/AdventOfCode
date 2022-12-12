@@ -67,8 +67,9 @@ __attribute__((unused)) char* day3_part2(const char* input) {
             if (current_group.length == 3) {
                 // We now have a list of lists, where the nested lists are the backpacks of the elves in the group.
                 // We need to find the intersection of all three backpacks.
-                List intersection = list_char_intersection(list_get(&current_group, 0), list_get(&current_group, 1),
-                                                           list_get(&current_group, 2), NULL);
+                List intersection = list_char_intersection(list_get_pointer(&current_group, 0),
+                                                           list_get_pointer(&current_group, 1),
+                                                           list_get_pointer(&current_group, 2), NULL);
                 assert(intersection.length >= 1);
                 char wrong_type = list_get_char(&intersection, 0);
                 sum += score_from_char(wrong_type);
@@ -76,7 +77,7 @@ __attribute__((unused)) char* day3_part2(const char* input) {
 
                 // We must clear the current group, meaning we should free all nested lists first.
                 for (size_t i = 0; i < 3; ++i) {
-                    List* line = list_get(&current_group, i);
+                    List* line = list_get_pointer(&current_group, i);
                     list_destroy(line);
                     free(line);
                 }
