@@ -24,7 +24,7 @@ List input_to_pairs(const char* input) {
 
     List pairs = list_create(1000, sizeof(Pair));
 
-    List current_line = list_create_string(20);
+    List current_line = list_create_for_char(20);
     int input_char;
     while ((input_char = fgetc(input_file)) != EOF) {
         if (input_char == '\n') {
@@ -57,8 +57,6 @@ List input_to_pairs(const char* input) {
         }
     }
 
-    list_destroy(&current_line);
-
     return pairs;
 }
 
@@ -75,13 +73,11 @@ __attribute__((unused)) char* day4_part1(const char* input) {
 
     int overlapping = 0;
     for (size_t i = 0; i < pairs.length; ++i) {
-        Pair* pair = (Pair*) list_get_raw(&pairs, i);
+        Pair* pair = (Pair*) list_get(&pairs, i);
         if (does_a_include_b(&pair->first, &pair->second) || does_a_include_b(&pair->second, &pair->first)) {
             overlapping++;
         }
     }
-
-    list_destroy(&pairs);
 
     return int_to_string(overlapping);
 }
@@ -91,13 +87,11 @@ __attribute__((unused)) char* day4_part2(const char* input) {
 
     int overlapping = 0;
     for (size_t i = 0; i < pairs.length; ++i) {
-        Pair* pair = (Pair*) list_get_raw(&pairs, i);
+        Pair* pair = (Pair*) list_get(&pairs, i);
         if (does_a_overlap_with_b(&pair->first, &pair->second) || does_a_overlap_with_b(&pair->second, &pair->first)) {
             overlapping++;
         }
     }
-
-    list_destroy(&pairs);
 
     return int_to_string(overlapping);
 }

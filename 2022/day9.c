@@ -68,7 +68,7 @@ __attribute__((unused)) char* day9_part1(const char* input) {
     list_append(&visited_positions, &tail_pos);
 
     for (size_t i = 0; i < file.lines.length; ++i) {
-        List* line = list_get_pointer(&file.lines, i);
+        List* line = list_get_list_p(&file.lines, i);
         char* direction = strtok(as_null_delimited_string(line), " ");
         char* amount_string = strtok(NULL, " ");
         long amount = strtol(amount_string, NULL, 10);
@@ -105,7 +105,7 @@ __attribute__((unused)) char* day9_part2(const char* input) {
     list_append(&visited_positions, &tail_pos);
 
     for (size_t i = 0; i < file.lines.length; ++i) {
-        List* line = list_get_pointer(&file.lines, i);
+        List* line = list_get_list_p(&file.lines, i);
         char* direction = strtok(as_null_delimited_string(line), " ");
         char* amount_string = strtok(NULL, " ");
         long amount = strtol(amount_string, NULL, 10);

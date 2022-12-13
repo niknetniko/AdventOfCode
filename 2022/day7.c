@@ -55,7 +55,6 @@ void free_fs_tree(FsNode* directory) {
         free_fs_tree(child);
         free(child);
     }
-    list_destroy(&directory->children);
 }
 
 
@@ -69,7 +68,7 @@ FsNode* parse_filesystem(const char* input) {
 
     for (size_t i = 0; i < file.lines.length; ++i) {
         // TODO: fix this memory leak, by copying the string...
-        char* line = as_null_delimited_string(list_get_pointer(&file.lines, i));
+        char* line = as_null_delimited_string(list_get_list_p(&file.lines, i));
         assert(cwd == NULL || cwd->type == DIRECTORY);
 
         // Handle a command
@@ -147,7 +146,6 @@ FsNode* parse_filesystem(const char* input) {
         }
     }
 
-    destroy_file(&file);
     assert(root != NULL);
 
     calculate_sizes(root);

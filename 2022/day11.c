@@ -62,10 +62,10 @@ long calculate_new_worry(const char* operation, long old_value) {
 }
 
 void do_monkey_in_round(const List* monkeys, size_t the_monkey_to_do, long divider, long modulus) {
-    Monkey* monkey = (Monkey*) list_get_raw(monkeys, the_monkey_to_do);
+    Monkey* monkey = (Monkey*) list_get(monkeys, the_monkey_to_do);
 
     while (monkey->items.length != 0) {
-        Item item = *((Item*) list_pop_raw(&monkey->items, 0));
+        Item item = *((Item*) list_pop(&monkey->items, 0));
         long new_worry = calculate_new_worry(monkey->new_worry_calculator, item.worry_level);
         item.worry_level = (new_worry / divider) % modulus;
 
@@ -75,7 +75,7 @@ void do_monkey_in_round(const List* monkeys, size_t the_monkey_to_do, long divid
         } else {
             receiver_index = monkey->if_not_worried_throw_to;
         }
-        Monkey* receiver = (Monkey*) list_get_raw(monkeys, receiver_index);
+        Monkey* receiver = (Monkey*) list_get(monkeys, receiver_index);
         monkey->inspected_objects++;
         list_append(&receiver->items, &item);
     }
@@ -88,12 +88,12 @@ List parse_monkeys(const char* input) {
     // We assume the monkeys are in order...
     for (size_t i = 0; i < file.lines.length; i += lines_per_monkey) {
 
-        List* monkey_number = list_get_pointer(&file.lines, i);
-        List* starting_items = list_get_pointer(&file.lines, i + 1);
-        List* operation = list_get_pointer(&file.lines, i + 2);
-        List* test = list_get_pointer(&file.lines, i + 3);
-        List* if_true = list_get_pointer(&file.lines, i + 4);
-        List* if_false = list_get_pointer(&file.lines, i + 5);
+        List* monkey_number = list_get_list_p(&file.lines, i);
+        List* starting_items = list_get_list_p(&file.lines, i + 1);
+        List* operation = list_get_list_p(&file.lines, i + 2);
+        List* test = list_get_list_p(&file.lines, i + 3);
+        List* if_true = list_get_list_p(&file.lines, i + 4);
+        List* if_false = list_get_list_p(&file.lines, i + 5);
 
 
         List actual_number = list_view(monkey_number, 7, (monkey_number->length - 7 - 1));
@@ -138,12 +138,12 @@ char* get_number_of_inspections(const List* monkeys) {
     List number_of_inspections = list_create(monkeys->length, sizeof(size_t));
 
     for (size_t m = 0; m < monkeys->length; ++m) {
-        Monkey* monkey = (Monkey*) list_get_raw(monkeys, m);
+        Monkey* monkey = (Monkey*) list_get(monkeys, m);
         list_append(&number_of_inspections, &monkey->inspected_objects);
     }
 
-    list_size_t_sort(&number_of_inspections, false);
-    size_t result = *((size_t*) list_get_raw(&number_of_inspections, 0)) * *((size_t*) list_get_raw(&number_of_inspections, 1));
+    list_sort_size_t(&number_of_inspections, false);
+    size_t result = list_get_size_t(&number_of_inspections, 0) * list_get_size_t(&number_of_inspections, 1);
     return size_t_to_string(result);
 }
 
@@ -168,7 +168,7 @@ __attribute__((unused)) char* day11_part2(const char* input) {
     // so the lcm is just the product.
     long lcm = 1;
     for (size_t m = 0; m < list_of_monkeys.length; ++m) {
-        Monkey* monkey = (Monkey*) list_get_raw(&list_of_monkeys, m);
+        Monkey* monkey = (Monkey*) list_get(&list_of_monkeys, m);
         lcm = lcm * monkey->test_divider;
     }
 

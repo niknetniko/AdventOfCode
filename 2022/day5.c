@@ -4,7 +4,6 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "day5.h"
@@ -30,16 +29,17 @@ CratesAndRearrangement parse_input(const char* input) {
     // We also assume that there is at least one line for which this is the case.
     // We also assume every stack is the same width.
     int next_line_index = 0;
-    List* current_line = list_get_pointer(&input_file.lines, next_line_index++);
+    List* current_line = list_get_list_p(&input_file.lines, next_line_index++);
+    List cc = list_get_list(&input_file.lines, next_line_index);
     // There must be 3 characters remaining, as the last stack does not have a space at the end.
     size_t number_of_stacks = current_line->length / 4 + 1;
-    List stacks = list_create(number_of_stacks, sizeof(List));
+    List stacks = list_create_for_list(number_of_stacks);
     for (size_t stack = 0; stack < number_of_stacks; ++stack) {
-        List st = list_create_string(10);
-        list_append(&stacks, &st);
+        List st = list_create_for_char(10);
+        list_append_list(&stacks, st);
     }
 
-    while (list_char_contains(current_line, '[')) {
+    while (list_contains_char(current_line, '[')) {
         assert(current_line->length % (4) == 3);
         assert(current_line->length / 4 + 1 == number_of_stacks);
 
@@ -47,16 +47,16 @@ CratesAndRearrangement parse_input(const char* input) {
             size_t stack_start = stack * 4;
             char stack_contents = list_get_char(current_line, stack_start + 1);
             if (stack_contents != ' ') {
-                List* stack_list = (List*) list_get_raw(&stacks, stack);
+                List* stack_list = list_get_list_p(&stacks, stack);
                 list_append_char(stack_list, stack_contents);
             }
         }
 
-        current_line = list_get_pointer(&input_file.lines, next_line_index++);
+        current_line = list_get_list_p(&input_file.lines, next_line_index++);
     }
 
     for (size_t i = 0; i < stacks.length; ++i) {
-        List* stack = (List*) list_get_raw(&stacks, i);
+        List* stack = (List*) list_get_list_p(&stacks, i);
         list_reverse(stack);
     }
 
@@ -67,7 +67,7 @@ CratesAndRearrangement parse_input(const char* input) {
     List moves = list_create(input_file.lines.length - next_line_index, sizeof(Move));
 
     for (size_t i = next_line_index; i < input_file.lines.length; ++i) {
-        List* the_line = list_get_pointer(&input_file.lines, i);
+        List* the_line = list_get_list_p(&input_file.lines, i);
         char* line = as_null_delimited_string(the_line);
         char* move = strtok(line, " ");
         assert(strcmp(move, "move") == 0);
@@ -88,27 +88,16 @@ CratesAndRearrangement parse_input(const char* input) {
         free(line);
     }
 
-    destroy_file(&input_file);
-
     return (CratesAndRearrangement) {
             .stack = stacks,
             .moves = moves
     };
 }
 
-void destroy_crates_and_arrangement(CratesAndRearrangement* data) {
-    for (size_t i = 0; i < data->stack.length; ++i) {
-        List* stack = (List*) list_get_raw(&data->stack, i);
-        list_destroy(stack);
-    }
-    list_destroy(&data->stack);
-    list_destroy(&data->moves);
-}
-
 void apply_move_9000(List* stacks, Move* move) {
     for (size_t i = 0; i < move->amount; ++i) {
-        List* src_stack = (List*) list_get_raw(stacks, move->from - 1);
-        List* dest_stack = (List*) list_get_raw(stacks, move->to - 1);
+        List* src_stack = (List*) list_get(stacks, move->from - 1);
+        List* dest_stack = (List*) list_get(stacks, move->to - 1);
 
         char crate = list_get_char(src_stack, src_stack->length - 1);
 
@@ -120,8 +109,8 @@ void apply_move_9000(List* stacks, Move* move) {
 }
 
 void apply_move_9001(List* stacks, Move* move) {
-    List* src_stack = (List*) list_get_raw(stacks, move->from - 1);
-    List* dest_stack = (List*) list_get_raw(stacks, move->to - 1);
+    List* src_stack = (List*) list_get(stacks, move->from - 1);
+    List* dest_stack = (List*) list_get(stacks, move->to - 1);
 
     // We know the data is chars, so we can directly use the raw data.
     assert(src_stack->element_size == sizeof(char));
@@ -141,7 +130,7 @@ void apply_move_9001(List* stacks, Move* move) {
 char* get_results(const List* stacks) {
     char* result = malloc(sizeof(char) * stacks->length + 1);
     for (size_t i = 0; i < stacks->length; ++i) {
-        List* stack = (List*) list_get_raw(stacks, i);
+        List* stack = (List*) list_get(stacks, i);
         char top = list_get_char(stack, stack->length - 1);
         result[i] = top;
     }
@@ -153,13 +142,11 @@ __attribute__((unused)) char* day5_part1(const char* input) {
     CratesAndRearrangement parsed = parse_input(input);
 
     for (size_t i = 0; i < parsed.moves.length; ++i) {
-        Move* move = (Move*) list_get_raw(&parsed.moves, i);
+        Move* move = (Move*) list_get(&parsed.moves, i);
         apply_move_9000(&parsed.stack, move);
     }
 
     char* result = get_results(&parsed.stack);
-    destroy_crates_and_arrangement(&parsed);
-
     return result;
 }
 
@@ -167,12 +154,10 @@ __attribute__((unused)) char* day5_part2(const char* input) {
     CratesAndRearrangement parsed = parse_input(input);
 
     for (size_t i = 0; i < parsed.moves.length; ++i) {
-        Move* move = (Move*) list_get_raw(&parsed.moves, i);
+        Move* move = (Move*) list_get(&parsed.moves, i);
         apply_move_9001(&parsed.stack, move);
     }
 
     char* result = get_results(&parsed.stack);
-    destroy_crates_and_arrangement(&parsed);
-
     return result;
 }

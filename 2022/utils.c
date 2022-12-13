@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <errno.h>
 
 #include "utils.h"
@@ -48,16 +47,16 @@ FILE* open_file_for_reading(const char* location) {
 }
 
 File read_lines(const char* location) {
-    List lines = list_create(100, sizeof(List*));
+    List lines = list_create_for_list(100);
 
-    List current_line = list_create_string(20);
+    List current_line = list_create_for_char(20);
     FILE* file = open_file_for_reading(location);
 
     int character;
     while ((character = getc(file)) != EOF) {
         if (character == '\n') {
-            List* copy = list_dynamic_copy(&current_line);
-            list_append_pointer(&lines, copy);
+            List copy = list_copy(&current_line);
+            list_append_list(&lines, copy);
             list_clear(&current_line);
         } else {
             list_append_char(&current_line, (char) character);
@@ -66,28 +65,14 @@ File read_lines(const char* location) {
 
     // We might still have a line if the file does not end in a newline.
     if (current_line.length != 0) {
-        List* copy = list_dynamic_copy(&current_line);
-        list_append_pointer(&lines, copy);
+        List copy = list_copy(&current_line);
+        list_append_list(&lines, copy);
     }
-
-    list_destroy(&current_line);
 
     return (File) {
             .lines = lines,
             .file = file
     };
-}
-
-void destroy_file(File* file) {
-    fclose(file->file);
-
-    // We must clear the current group, meaning we should free all nested lists first.
-    for (size_t i = 0; i < file->lines.length; ++i) {
-        List* line = list_get_pointer(&file->lines, i);
-        list_destroy(line);
-        free(line);
-    }
-    list_destroy(&file->lines);
 }
 
 char* long_to_string(long original_number) {

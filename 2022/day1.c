@@ -12,13 +12,13 @@
 
 List calculate_elf_sums(const char* input) {
     // Keep an array with the sum for each elf.
-    List elf_sums = list_create_int_list(10);
+    List elf_sums = list_create_for_int(10);
 
     // Keep an array of the lines for the current elf.
     List lines = list_create(5, sizeof(char*));
 
     // The current line we are reading.
-    List current_line = list_create_string(5);
+    List current_line = list_create_for_char(5);
 
     FILE* input_file = open_file_for_reading(input);
     int previous_char;
@@ -54,14 +54,14 @@ List calculate_elf_sums(const char* input) {
 
 __attribute__((unused)) char* day1_part1(const char* input) {
     List elf_sums = calculate_elf_sums(input);
-    int max_calories = list_int_max(&elf_sums);
+    int max_calories = list_max_int(&elf_sums);
     return int_to_string(max_calories);
 }
 
 __attribute__((unused)) char* day1_part2(const char* input) {
     List elf_sums = calculate_elf_sums(input);
-    list_int_sort(&elf_sums, false);
+    list_sort_int(&elf_sums, false);
     List top_three = list_view(&elf_sums, 0, 3);
-    int sum_calories = list_int_sum(&top_three);
+    int sum_calories = list_sum_int(&top_three);
     return int_to_string(sum_calories);
 }

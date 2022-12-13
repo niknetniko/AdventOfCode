@@ -13,12 +13,12 @@ __attribute__((unused)) char* day10_part1(const char* input) {
     File file = read_lines(input);
 
     long register_x = 1;
-    List saved_values = list_create(10, sizeof(long));
+    List saved_values = list_create_for_long(10);
     long cycle_counter = 1;
     for (size_t ip = 0; ip < file.lines.length; ++ip) {
         // We could parse everything first, but why would I?
         // If, in a future day, this needs to be expanded, we'll do it then.
-        char* line = as_null_delimited_string(list_get_pointer(&file.lines, ip));
+        char* line = as_null_delimited_string(list_get_list_p(&file.lines, ip));
 
         char* instruction = strtok(line, " ");
 
@@ -27,7 +27,7 @@ __attribute__((unused)) char* day10_part1(const char* input) {
         if (cycle_counter == 20 || cycle_counter == 60 || cycle_counter == 100 || cycle_counter == 140 ||
             cycle_counter == 180 || cycle_counter == 220) {
             long value = register_x * cycle_counter;
-            list_append(&saved_values, &value);
+            list_append_long(&saved_values, value);
         }
 
         // Handle the second cycle of the addx instruction.
@@ -40,17 +40,12 @@ __attribute__((unused)) char* day10_part1(const char* input) {
             if (cycle_counter == 20 || cycle_counter == 60 || cycle_counter == 100 || cycle_counter == 140 ||
                 cycle_counter == 180 || cycle_counter == 220) {
                 long value = register_x * cycle_counter;
-                list_append(&saved_values, &value);
+                list_append_long(&saved_values, value);
             }
         }
     }
 
-    long sum = 0;
-    for (size_t i = 0; i < saved_values.length; ++i) {
-        long* saved_value = (long*) list_get_raw(&saved_values, i);
-        sum += *saved_value;
-    }
-
+    long sum = list_sum_long(&saved_values);
     return long_to_string(sum);
 }
 
@@ -98,7 +93,7 @@ __attribute__((unused)) char* day10_part2(const char* input) {
     for (size_t ip = 0; ip < file.lines.length; ++ip) {
         // We could parse everything first, but why would I?
         // If, in a future day, this needs to be expanded, we'll do it then.
-        char* line = as_null_delimited_string(list_get_pointer(&file.lines, ip));
+        char* line = as_null_delimited_string(list_get_list_p(&file.lines, ip));
 
         char* instruction = strtok(line, " ");
 

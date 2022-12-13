@@ -100,11 +100,10 @@ __attribute__((unused)) char* day2_part1(const char* input) {
     List matches = input_to_matches(input);
     int my_score = 0;
     for (size_t i = 0; i < matches.length; ++i) {
-        MatchOrExpectedOutcome* match = (MatchOrExpectedOutcome*) list_get_raw(&matches, i);
+        MatchOrExpectedOutcome* match = (MatchOrExpectedOutcome*) list_get(&matches, i);
         my_score += get_match_score(match);
         my_score += get_shape_score((Play) match->me);
     }
-    list_destroy(&matches);
     return int_to_string(my_score);
 }
 
@@ -137,7 +136,7 @@ __attribute__((unused)) char* day2_part2(const char* input) {
     List matches = input_to_matches(input);
     int my_score = 0;
     for (size_t i = 0; i < matches.length; ++i) {
-        MatchOrExpectedOutcome* expected_outcome = (MatchOrExpectedOutcome*) list_get_raw(&matches, i);
+        MatchOrExpectedOutcome* expected_outcome = (MatchOrExpectedOutcome*) list_get(&matches, i);
         MatchOrExpectedOutcome actual_match = {
                 .opponent = expected_outcome->opponent,
                 .me = expected_outcome_to_needed_play(expected_outcome)
@@ -145,6 +144,5 @@ __attribute__((unused)) char* day2_part2(const char* input) {
         my_score += get_match_score(&actual_match);
         my_score += get_shape_score(actual_match.me);
     }
-    list_destroy(&matches);
     return int_to_string(my_score);
 }

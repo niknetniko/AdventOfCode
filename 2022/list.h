@@ -5,6 +5,34 @@
 #ifndef ADVENTOFCODE_LIST_H
 #define ADVENTOFCODE_LIST_H
 
+#define list_create_header(name) List list_create_for_##name(size_t initial_capacity)
+#define list_append_header(type, name) void list_append_##name(List* list, type item)
+#define list_get_header(type, name) type list_get_##name(const List* list, size_t index)
+#define list_get_header_p(type, name) type* list_get_##name##_p(const List* list, size_t index)
+#define list_pop_header(type, name) type list_pop_##name(List* list, size_t index)
+#define list_contains_header(type, name) bool list_contains_##name(const List* list, type element)
+
+#define list_headers_for(type, name)   \
+    list_create_header(name);          \
+    list_append_header(type, name);    \
+    list_get_header(type, name);       \
+    list_get_header_p(type, name);     \
+    list_pop_header(type, name);       \
+    list_contains_header(type, name);  \
+
+#define list_sort_header(name) void list_sort_##name(List* list, bool ascending)
+#define list_max_header(type, name) type list_max_##name(const List* list)
+#define list_min_header(type, name) type list_min_##name(const List* list)
+#define list_sum_header(type, name) type list_sum_##name(const List* list)
+
+#define numeric_list(type)       \
+    list_headers_for(type, type) \
+    list_sort_header(type);      \
+    list_min_header(type, type); \
+    list_max_header(type, type); \
+    list_sum_header(type, type); \
+
+#include <assert.h>
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -20,76 +48,44 @@ typedef struct List {
 } List;
 
 List list_create(size_t initial_capacity, size_t element_size);
-
-List list_create_string(size_t initial_capacity);
-
-List list_create_int_list(size_t initial_capacity);
-
 void list_append(List* list, void* raw_data_pointer);
-
-void list_append_pointer(List* list, void* element);
-
-void list_append_char(List* list, char element);
-
-void list_append_int(List* list, int element);
-
-// Delete a list (but not the elements of the list itself).
-void list_destroy(List* list);
-
-// Delete a list and free its contents.
-void list_destroy_and_free_contents(List* list);
-
-// Remove content, but not the memory.
 void list_clear(List* list);
 
-void list_clear_and_free_contents(List* list);
+char* list_get(const List* list, size_t index);
+char* list_pop(List* list, size_t index);
 
-char* list_get_raw(const List* list, size_t index);
-
-char* list_pop_raw(List* list, size_t index);
-
-char list_get_char(const List* list, size_t index);
-
-int list_get_int(const List* list, size_t index);
-
-void* list_get_pointer(const List* list, size_t index);
-
-// Get a slice of the list.
-// Note that this list should not be freed, as the data is the same as the original list.
 // TODO: disallow editing this list...
 List list_view(const List* list, size_t start, size_t length);
 
-List* list_dynamic_copy(const List* list);
+List list_copy(const List* list);
 
 void list_reverse(List* list);
+
+List list_intersection(const List* a, ...);
+
+bool list_contains(const List* haystack, char* raw_needle_pointer);
+
+// ======================
+// Supported types
+// ======================
+numeric_list(char)
+
+numeric_list(int)
+
+numeric_list(size_t)
+
+numeric_list(long)
+
+list_headers_for(void*, pointer)
+
+list_headers_for(List, list)
 
 // ======================
 // Some utility functions
 // ======================
 
-void list_int_print(const List* list);
-
 // Get it as a null delimited list.
 // You get ownership of this list.
 char* as_null_delimited_string(const List* string);
-
-// Get max value from a list with ints.
-int list_int_max(const List* list);
-
-int list_int_sum(const List* list);
-
-// Sort the list with ints in place.
-void list_int_sort(List* list, bool ascending);
-void list_size_t_sort(List* list, bool ascending);
-
-// Check if a char list contains a char.
-bool list_char_contains(const List* haystack, char needle);
-
-bool list_contains(const List* haystack, char* raw_needle_pointer);
-
-// Create a new list containing the intersection of two lists.
-// You get ownership of the new list, so free it.
-// YOU MUST PASS NULL AS THE LAST LIST!
-List list_char_intersection(const List* a, ...);
 
 #endif //ADVENTOFCODE_LIST_H
