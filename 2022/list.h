@@ -51,8 +51,8 @@ List list_create(size_t initial_capacity, size_t element_size);
 void list_append(List* list, void* raw_data_pointer);
 void list_clear(List* list);
 
-char* list_get(const List* list, size_t index);
-char* list_pop(List* list, size_t index);
+void* list_get(const List* list, size_t index);
+void* list_pop(List* list, size_t index);
 
 // TODO: disallow editing this list...
 List list_view(const List* list, size_t start, size_t length);

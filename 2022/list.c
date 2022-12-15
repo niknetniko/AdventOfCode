@@ -120,11 +120,11 @@ List list_create(size_t initial_capacity, size_t element_size) {
     return result;
 }
 
-char* list_get(const List* list, size_t index) {
+void* list_get(const List* list, size_t index) {
     return list->data + (index * list->element_size);
 }
 
-char* list_pop(List* list, size_t index) {
+void* list_pop(List* list, size_t index) {
     char* existing_address = list_get(list, index);
     char* raw_data = malloc(list->element_size);
     memcpy(raw_data, existing_address, list->element_size);

@@ -4,10 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <errno.h>
-#include <assert.h>
-#include <stdbool.h>
 
 #include "day1.h"
 #include "day2.h"
@@ -21,6 +18,7 @@
 #include "day10.h"
 #include "day11.h"
 #include "day12.h"
+#include "day13.h"
 
 // day1_part1
 
@@ -97,6 +95,9 @@ int main(int argc, char** argv) {
             break;
         case 12:
             PART_CALL(12);
+            break;
+        case 13:
+            PART_CALL(13);
             break;
         default:
             fprintf(stderr, "Day %s is not a valid day", argv[1]);

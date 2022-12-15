@@ -105,7 +105,7 @@ void do_pathfinding_to_top(long rows, long cols, Cell grid[rows][cols], Cell* st
     }
 }
 
-char* day12_part1(const char* input) {
+__attribute__((unused)) char* day12_part1(const char* input) {
     File file = read_lines(input);
     List lines = file.lines;
 
@@ -138,7 +138,7 @@ char* day12_part1(const char* input) {
     return size_t_to_string(goal->min_distance);
 }
 
-char* day12_part2(const char* input) {
+__attribute__((unused)) char* day12_part2(const char* input) {
     File file = read_lines(input);
     List lines = file.lines;
 
