@@ -19,6 +19,7 @@
 #include "day11.h"
 #include "day12.h"
 #include "day13.h"
+#include "day14.h"
 
 // day1_part1
 
@@ -98,6 +99,9 @@ int main(int argc, char** argv) {
             break;
         case 13:
             PART_CALL(13);
+            break;
+        case 14:
+            PART_CALL(14);
             break;
         default:
             fprintf(stderr, "Day %s is not a valid day", argv[1]);

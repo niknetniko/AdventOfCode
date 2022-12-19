@@ -10,7 +10,9 @@
 
 // Convert an int to a string. You get ownership.
 char* int_to_string(int number);
+
 char* size_t_to_string(size_t number);
+
 char* long_to_string(long number);
 
 // Open a file for reading, while dealing with errors.
@@ -26,6 +28,10 @@ typedef struct File {
 // You should call destroy_file on the result.
 File read_lines(const char* location);
 
-void destroy_file(File* file);
+List split_string(const char* source, const char* delimiter);
+
+int int_min(int a, int b);
+
+int int_max(int a, int b);
 
 #endif //ADVENTOFCODE_UTILS_H
