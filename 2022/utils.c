@@ -120,7 +120,7 @@ List split_string(const char* source, const char* delimiter) {
 
     // Save the last part of the string.
     unsigned long remainder = source + total_length - prev_position;
-    if (remainder > skip) {
+    if (remainder >= skip) {
         char* part = malloc(sizeof(char) * (remainder + 1));
         if (!part) {
             fprintf(stderr, "Not enough memory to split string!\n");

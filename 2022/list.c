@@ -264,3 +264,12 @@ char* as_null_delimited_string(const List* string) {
     result[string->length] = '\0';
     return result;
 }
+
+void list_merge_into(List* goal, const List* from) {
+    assert(goal->element_size == from->element_size);
+    // TODO: this could be done more efficiently.
+
+    for (size_t i = 0; i < from->length; ++i) {
+        list_append(goal, list_get(from, i));
+    }
+}

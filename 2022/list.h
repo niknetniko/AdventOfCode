@@ -54,6 +54,8 @@ void list_clear(List* list);
 void* list_get(const List* list, size_t index);
 void* list_pop(List* list, size_t index);
 
+void list_merge_into(List* goal, const List* from);
+
 // TODO: disallow editing this list...
 List list_view(const List* list, size_t start, size_t length);
 
