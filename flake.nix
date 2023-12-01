@@ -6,17 +6,14 @@
     flake-utils.url = "github:numtide/flake-utils";
     devshell = {
       url = "github:numtide/devshell";
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = { self, nixpkgs, devshell, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; overlays = [ devshell.overlay ]; };
+        pkgs = import nixpkgs { inherit system; overlays = [ devshell.overlays.default ]; };
       in
       {
         devShells = rec {
@@ -25,6 +22,7 @@
             name = "AoC";
             packages = with pkgs; [
               jdk
+              erlang
               elixir
               clang
               clang-tools
@@ -37,6 +35,8 @@
             devshell.startup.link.text = ''
               mkdir -p "$PRJ_DATA_DIR/mix"
               mkdir -p "$PRJ_DATA_DIR/hex"
+              ln -sfn ${pkgs.erlang} "$PRJ_DATA_DIR/current/erlang"
+              ln -sfn ${pkgs.elixir} "$PRJ_DATA_DIR/current/elixir"
             '';
             env = [
               {
