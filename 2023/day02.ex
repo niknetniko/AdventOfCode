@@ -34,9 +34,8 @@ defmodule Day02 do
     end)
   end
 
-  defp game_power(game) do
-    minimum_cubes(game)
-    |> Enum.map(fn {_, amount} -> amount end)
+  defp game_power(minima) do
+    Enum.map(minima, fn {_, amount} -> amount end)
     |> Enum.product()
   end
 
@@ -55,6 +54,7 @@ defmodule Day02 do
     File.read!(file)
     |> String.split("\n", trim: true)
     |> Enum.map(&parse_game/1)
+    |> Enum.map(&minimum_cubes/1)
     |> Enum.map(&game_power/1)
     |> Enum.sum()
   end
