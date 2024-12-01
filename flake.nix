@@ -24,13 +24,14 @@
               jdk
               erlang
               elixir
-              clang
-              clang-tools
+#               clang
+#               clang-tools
               gnumake
               valgrind
               perf-tools
               linuxPackages_latest.perf
               hyperfine
+              gfortran
             ];
             devshell.startup.link.text = ''
               mkdir -p "$PRJ_DATA_DIR/mix"
@@ -54,16 +55,6 @@
               {
                 name = "PATH";
                 prefix = "$HEX_HOME/bin";
-              }
-            ];
-            commands = [
-              {
-                name = "idea";
-                category = "editor";
-                help = "Start Intellij Ultimate (system) in this project.";
-                command = ''
-                  idea-ultimate . >/dev/null 2>&1 &
-                '';
               }
             ];
           };
