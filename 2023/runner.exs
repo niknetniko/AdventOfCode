@@ -16,7 +16,7 @@ defmodule Runner do
     [day, part, input] = System.argv()
 
     run(day, part, input)
-    |> IO.inspect()
+    |> IO.inspect(charlists: :as_lists)
   end
 end
 
