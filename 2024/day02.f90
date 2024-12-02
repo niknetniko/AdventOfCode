@@ -2,6 +2,7 @@ program day02
     implicit none
 
     call part1
+    call part2
 contains
 
     subroutine calculate_difference(array, diff)
@@ -79,4 +80,50 @@ contains
 
         print *, "Part 1:", safe_reports
     end subroutine part1
+
+    subroutine part2
+        use fpm_strings
+
+        character(len = :), allocatable, dimension(:) :: data, char_levels
+        integer, allocatable, dimension(:) :: differences, levels, levels_tolerated, differences_tolerated
+        integer :: report_number, safe_reports, removing
+
+        call read_data(data)
+
+        safe_reports = 0
+
+        do report_number = 1, size(data)
+            call split(data(report_number), char_levels, " ")
+
+            allocate(levels(size(char_levels)))
+            read(data(report_number), *) levels
+
+            allocate(differences(size(levels) - 1))
+            call calculate_difference(levels, differences)
+
+            if (is_increasing(differences) .or. is_decreasing(differences)) then
+                safe_reports = safe_reports + 1
+                deallocate(levels, differences)
+                cycle
+            end if
+
+            ! Brute force all possibilities.
+            allocate(levels_tolerated(size(levels) - 1))
+            allocate(differences_tolerated(size(differences) - 1))
+
+            do removing = 1, size(levels)
+                levels_tolerated = [levels(1:removing - 1), levels(removing + 1:size(levels))]
+                call calculate_difference(levels_tolerated, differences_tolerated)
+
+                if (is_decreasing(differences_tolerated) .or. is_increasing(differences_tolerated)) then
+                    safe_reports = safe_reports + 1
+                    exit
+                end if
+            end do
+
+            deallocate(levels, differences, levels_tolerated, differences_tolerated)
+        end do
+
+        print *, "Part 2:", safe_reports
+    end subroutine part2
 end program
