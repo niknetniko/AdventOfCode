@@ -80,27 +80,15 @@ contains
     end subroutine quicksort
 
     subroutine read_data(lines, left_list, right_list)
+        use io
         integer, intent(out) :: lines
         integer, allocatable, intent(out) :: left_list(:), right_list(:)
 
-        integer :: line_number, status, input_data
-
-        open(newunit = input_data, file = "day01.in", status = "old", action = "read")
-
-        ! Count the lines in the file
-        lines = 0
-        do
-            read(input_data, *, iostat = status)
-            if (status /= 0) then
-                exit ! Stop the loop, since we are at the end of the file.
-            end if
-            lines = lines + 1
-        end do
-
-        rewind(input_data)
-
+        integer :: line_number, input_data
+        lines = count_lines("day01.in")
         allocate(left_list(lines), right_list(lines))
 
+        open(newunit = input_data, file = "day01.in", status = "old", action = "read")
         ! Read the numbers into an array
         do line_number = 1, lines
             ! This is "List-directed I/O"
